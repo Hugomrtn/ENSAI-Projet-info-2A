@@ -18,3 +18,11 @@ class geometrie:
                                          + x1):
                         intersections += 1
         return intersections % 2 == 1
+
+    def est_dans_liste_polygones(liste_polygones: list, point: list):
+        b = False
+        for i in range(liste_polygones):
+            b = geometrie.est_dans_polygone(liste_polygones[i], point)
+            if b:
+                break
+        return b

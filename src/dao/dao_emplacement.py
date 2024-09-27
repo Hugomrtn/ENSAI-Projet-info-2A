@@ -5,7 +5,7 @@ from utils.singleton import Singleton
 
 from dao.db_connection import DBConnection
 
-# from business_object.emplacement import Emplacement
+from business_object.emplacement import Emplacement
 
 
 class Dao_emplacement(metaclass=Singleton):
@@ -65,3 +65,46 @@ class Dao_emplacement(metaclass=Singleton):
             raise
 
         return res
+
+    def creer(self, emplacement: Emplacement) -> bool:
+        """Creation d'un emplacement dans la base de données
+            Parameters
+            ----------
+            emplacement : Emplacement
+
+            Returns
+            -------
+            created : bool
+                True si la création est un succès
+                False sinon
+            """
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO emplacement(id_emplacement,        "
+                        "nom_emplacement, niveau, pop, annee) VALUES    "
+                        "(%(id_emplacement)s, %(nom_emplacement)s,      "
+                        "%(niveau)s, %(pop)s, %(annee)s)                "
+                        "RETURNING id_emplacement;                      ",
+                        {
+                            "id_emplacement": emplacement.id_emplacement,
+                            "nom_emplacement": emplacement.nom_emplacement,
+                            "niveau": emplacement.niveau,
+                            "pop": emplacement.pop,
+                            "annee": emplacement.annee,
+                        },
+                    )
+                    res = cursor.fetchone()
+        except Exception as e:
+            logging.info(e)
+
+        created = False
+        if res:
+            emplacement.id_emplacement = res["id_emplacement"]
+            created = True
+
+        return created

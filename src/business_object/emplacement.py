@@ -4,7 +4,7 @@
 class Emplacement:
 
     def __init__(self, niveau: str, nom: str, population: int,
-                 id_com: int = None, id_reg: int = None, id_dep: int= None,
+                 id_com: int = None, id_reg: int = None, id_dep: int = None,
                  id_can: int = None, id_arr: int = None) -> None:
         """constructeur"""
 

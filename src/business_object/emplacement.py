@@ -25,3 +25,9 @@ class Emplacement:
         """Retourne les attributs de l'emplacement dans une liste"""
         return [self.niveau, self.nom, self.population, self.id_com,
                 self.id_reg, self.id_can, self.id_arr]
+
+# a faire : tout afficher et coder obtenir_nom
+    def toutes_informations(self):
+        region = obtenir_nom(self.id_reg)
+        canton = obtenir_nom(self.id_can)
+        arrondissement = obtenir_nom(self.id_arr)

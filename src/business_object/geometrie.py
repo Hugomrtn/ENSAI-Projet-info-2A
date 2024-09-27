@@ -12,12 +12,9 @@ class geometrie:
             x1, y1 = polygone[i]
             x2, y2 = polygone[(i + 1) % len(polygone)]
 
-            # Vérifie si le point se situe au même niveau vertical
             if min(y1, y2) < y <= max(y1, y2) and x <= max(x1, x2):
-                # Vérifie que le point n'est pas derrière l'intersection
                 if y1 != y2:
-                    inter_x = (y - y1) * (x2 - x1) / (y2 - y1) + x1
-                if x1 == x2 or x <= inter_x:
-                    intersections += 1
-        # Si le nombre d'intersections est impair, alors le point y appartient
+                    if x1 == x2 or x <= ((y - y1) * (x2 - x1) / (y2 - y1)
+                                         + x1):
+                        intersections += 1
         return intersections % 2 == 1

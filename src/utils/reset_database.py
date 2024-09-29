@@ -1,4 +1,6 @@
+from utils.log_decorator import log
 from utils.singleton import Singleton
+
 from dao.db_connection import DBConnection
 
 
@@ -7,6 +9,7 @@ class ResetDatabase(metaclass=Singleton):
     Reinitialisation de la base de données
     """
 
+    @log
     def lancer(self):
         print("Ré-initialisation de la base de données")
 

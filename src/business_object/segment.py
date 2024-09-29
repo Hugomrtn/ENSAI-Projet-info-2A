@@ -2,6 +2,12 @@ from src.business_object.point import Point
 
 
 class Segment:
+    """Classe représentant un segment
+    Attributs
+    ----------
+    x: Point
+    y: Point
+    """
     def __init__(self, point1: Point, point2: Point) -> None:
         self.point1 = point1
         self.point2 = point2

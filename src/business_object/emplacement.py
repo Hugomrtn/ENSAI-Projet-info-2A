@@ -2,6 +2,12 @@
 
 
 class Emplacement:
+    """Classe représentant un emplacement
+    Attributs
+    ----------
+
+
+    """
 
     def __init__(self, niveau: str, nom: str, population: int,
                  id_com: int = None, id_reg: int = None, id_dep: int = None,

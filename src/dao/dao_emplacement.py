@@ -1,7 +1,9 @@
+# créé un emplacement
+
 import logging
 
 from utils.singleton import Singleton
-# from utils.log_decorator import log
+from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
 
@@ -10,8 +12,9 @@ from business_object.emplacement import Emplacement
 
 class Dao_emplacement(metaclass=Singleton):
 
+    @log
     def creer(self, emplacement: Emplacement) -> bool:
-        """Creation d'un emplacement dans la base de données
+        """Création d'un emplacement dans la base de données
             Parameters
             ----------
             emplacement : Emplacement
@@ -29,7 +32,7 @@ class Dao_emplacement(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO emplacement(id_emplacement,        "
+                        "INSERT INTO emplacements(id_emplacement,       "
                         "nom_emplacement, niveau, pop, annee) VALUES    "
                         "(%(id_emplacement)s, %(nom_emplacement)s,      "
                         "%(niveau)s, %(pop)s, %(annee)s)                "
@@ -71,7 +74,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT nom_emplacement                             "
-                        "  FROM emplacement                                 "
+                        "  FROM emplacements                                "
                         " WHERE id_emplacement = %(id_emplacement)i;        ",
                     )
                     res = cursor.fetchone()
@@ -99,7 +102,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT *                                           "
-                        "  FROM emplacement                                 "
+                        "  FROM emplacements                                "
                         " WHERE id_emplacement = %(id_emplacement)i;        ",
                     )
                     res = cursor.fetchall()

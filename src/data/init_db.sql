@@ -7,7 +7,7 @@ CREATE SCHEMA projet_2A;
 -- lieu
 -----------------------------------------------------
 DROP TABLE IF EXISTS lieu CASCADE ;
-CREATE TABLE projet_2A.emplacement(
+CREATE TABLE projet_2A.emplacements(
     id_emplacement UNIQUE INT, -- on utilisera le code insee
     nom_emplacement TEXT;
     niveau TEXT;
@@ -22,7 +22,22 @@ CREATE TABLE projet_2A.points(
     id_point SERIAL PRIMARY KEY,
     long FLOAT;
     lat FLOAT;
-    annee INT;
+);
+-----------------------------------------------------
+-- polygones
+-----------------------------------------------------
+DROP TABLE IF EXISTS polygones CASCADE ;
+CREATE TABLE projet_2A.polygones(
+    id_polygone SERIAL PRIMARY KEY,
+);
+-----------------------------------------------------
+-- association_polygone_points
+-----------------------------------------------------
+DROP TABLE IF EXISTS association_polygone_points CASCADE ;
+CREATE TABLE projet_2A.association_polygone_points(
+    id_polygone FOREIGN KEY REFERENCES polygones(id_polygone),
+    id_point FOREIGN KEY REFERENCES points(id_point),
+    ordre INT
 );
 -----------------------------------------------------
 -- delimitations

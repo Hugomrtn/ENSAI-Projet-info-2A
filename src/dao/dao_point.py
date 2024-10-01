@@ -67,3 +67,37 @@ class Dao_point(metaclass=Singleton):
         for i in range(len(liste)):
             res.append(Dao_point.creer(liste[i]))
         return res
+
+    @log
+    def existe(self, point: Point) -> bool:
+        """Vérifie si un point existe déjà dans la base de données
+            Parameters
+            ----------
+            point : Point
+
+            Returns
+            -------
+            existe : bool
+                True si le point existe
+                False sinon
+            """
+        existe = False
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_point FROM points WHERE x = %(x)s    "
+                        "AND y = %(y)s;                                 ",
+                        {
+                            "x": point.x,
+                            "y": point.y,
+                        },
+                    )
+                    res = cursor.fetchone()
+                    if res:
+                        point.id_point = res["id_point"]
+                        existe = True
+        except Exception as e:
+            logging.info(e)
+
+        return existe

@@ -27,7 +27,8 @@ class LogIndetation:
 
 def log(func):
     """Création d'un décorateur nommé log
-    Lorsque ce décorateur est appliqué à une méthode, cela affichera dans les logs :
+    Lorsque ce décorateur est appliqué à une méthode, cela affichera dans les
+    logs :
     - l'appel de cette méthode avec les valeurs de paramètres
     - la sortie retournée par cette méthode
     """
@@ -42,24 +43,28 @@ def log(func):
         # Recuperation des parametres de la methode
         class_name = args[0].__class__.__name__ if args else ""
         method_name = func.__name__
-        args_list = list(
-            [str(arg) if not isinstance(arg, numbers.Number) else arg for arg in args[1:]]
-            + list(kwargs.values())
-        )
+        args_list = list([
+            str(arg) if not isinstance(arg, numbers.Number) else arg
+            for arg in args[1:]
+        ] + list(kwargs.values()))
 
         # pour cacher les mots de passe
-        param_names = func.__code__.co_varnames[1 : func.__code__.co_argcount]
+        param_names = func.__code__.co_varnames[1:func.__code__.co_argcount]
         for i, v in enumerate(param_names):
-            if v in ["password", "passwd", "pwd", "pass", "mot_de_passe", "mdp"]:
+            if v in [
+                    "password", "passwd", "pwd", "pass", "mot_de_passe", "mdp"
+            ]:
                 args_list[i] = "*****"
 
         # Transforme en tuple pour avoir un affichage avec des parentheses
         args_list = tuple(args_list)
 
         # Affichage dans le fichier de log
-        logger.info(f"{indentation}{class_name}.{method_name}{args_list} - DEBUT")
+        logger.info(
+            f"{indentation}{class_name}.{method_name}{args_list} - DEBUT")
         result = func(*args, **kwargs)
-        logger.info(f"{indentation}{class_name}.{method_name}{args_list} - FIN")
+        logger.info(
+            f"{indentation}{class_name}.{method_name}{args_list} - FIN")
 
         # Reduction de l affichage de la sortie si trop longue
         if isinstance(result, list):

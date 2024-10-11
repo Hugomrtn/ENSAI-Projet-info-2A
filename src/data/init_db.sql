@@ -4,11 +4,11 @@
 DROP SCHEMA IF EXISTS projet_2A CASCADE;
 CREATE SCHEMA projet_2A;
 -----------------------------------------------------
--- lieu
+-- emplacement
 -----------------------------------------------------
-DROP TABLE IF EXISTS lieu CASCADE ;
-CREATE TABLE projet_2A.lieu(
-    id_lieu SERIAL PRIMARY KEY
+DROP TABLE IF EXISTS emplacement CASCADE ;
+CREATE TABLE projet_2A.emplacement(
+    id_emplacement SERIAL PRIMARY KEY
     nom TEXT
     niveau TEXT
     code INT
@@ -55,11 +55,11 @@ CREATE TABLE projet_2A.association_contours_polygones(
     appartient BOOLEAN,
 );
 -----------------------------------------------------
--- association_lieu_contour
+-- association_emplacement_contour
 -----------------------------------------------------
-DROP TABLE IF EXISTS association_lieu_contour CASCADE ;
-CREATE TABLE projet_2A.association_lieu_contour(
-    id_lieu FOREIGN KEY REFERENCES lieu(id_lieu),
+DROP TABLE IF EXISTS association_emplacement_contour CASCADE ;
+CREATE TABLE projet_2A.association_emplacement_contour(
+    id_emplacement FOREIGN KEY REFERENCES emplacement(id_emplacement),
     annee INT,
     id_contour FOREIGN KEY REFERENCES contour(id_contour),
     pop INT,

@@ -1,5 +1,3 @@
-# créé un emplacement
-
 import logging
 
 from utils.singleton import Singleton
@@ -35,14 +33,13 @@ class Dao_emplacement(metaclass=Singleton):
                         "INSERT INTO emplacements(id_emplacement,       "
                         "nom_emplacement, niveau, pop, annee) VALUES    "
                         "(%(id_emplacement)s, %(nom_emplacement)s,      "
-                        "%(niveau)s, %(pop)s, %(annee)s)                "
+                        "%(niveau)s, %(code)s)                "
                         "RETURNING id_emplacement;                      ",
                         {
                             "id_emplacement": emplacement.id_emplacement,
                             "nom_emplacement": emplacement.nom_emplacement,
                             "niveau": emplacement.niveau,
-                            "pop": emplacement.pop,
-                            "annee": emplacement.annee,
+                            "code": emplacement.code,
                         },
                     )
                     res = cursor.fetchone()
@@ -112,7 +109,8 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res
 
-    def obtenir_emplacement_selon_niveau_annne(self, annee, niveau) -> str:
+    @log
+    def obtenir_id_emplacements_selon_niveau_annne(self, niveau, annee):
         """Trouve tous les emplacements selon l'année et le niveau
 
         Parameters
@@ -130,7 +128,7 @@ class Dao_emplacement(metaclass=Singleton):
                         "JOIN association_emplacement_contour               "
                         "USING(id_emplacement)                              "
                         "WHERE emplacement.niveau = %(niveau)s              "
-                        "AND association_emplacement_contour = %(annee)s;   ",
+                        "AND association_emplacement_contour.annee = %(annee)s;   ",
                         {
                             "niveau": niveau,
                             "annee": annee,
@@ -141,4 +139,9 @@ class Dao_emplacement(metaclass=Singleton):
             logging.info(e)
             raise
 
-        return res
+        liste_id_emplacements = []
+
+        for i in range(res):
+            liste_id_emplacements.append(res["id_emplacement"][i])
+
+        return liste_id_emplacements

@@ -117,3 +117,74 @@ class Dao_point(metaclass=Singleton):
             return False
 
         return res is not None
+
+
+#######################################
+
+    @log
+    def obtenir_id_polygones_composants_selon_id_contour(self, id_contour):
+        """Trouve tous les polygones qui appartiennent à un contour
+
+        Parameters
+        ----------
+
+        Returns
+
+        """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_polygone                                 "
+                        "FROM association_contours_polygones                "
+                        "WHERE id_contour = %(id_contour)s                  "
+                        "AND appartient = TRUE                              ",
+                        {
+                            "id_contour": id_contour,
+                        }
+                    )
+                    res = cursor.fetchall()
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        liste_id_polygones_composants = []
+
+        for i in range(liste_id_polygones_composants):
+            liste_id_polygones_composants.append(res["id_polygone"][i])
+
+        return liste_id_polygones_composants
+
+    @log
+    def obtenir_id_polygones_enclaves_selon_id_contour(self, id_contour):
+        """Trouve tous les polygones qui appartiennent à un contour
+
+        Parameters
+        ----------
+
+        Returns
+
+        """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_polygone                                 "
+                        "FROM association_contours_polygones                "
+                        "WHERE id_contour = %(id_contour)s                  "
+                        "AND appartient = FALSE                             ",
+                        {
+                            "id_contour": id_contour,
+                        }
+                    )
+                    res = cursor.fetchall()
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        liste_id_polygones_enclaves = []
+
+        for i in range(liste_id_polygones_enclaves):
+            liste_id_polygones_enclaves.append(res["id_polygone"][i])
+
+        return liste_id_polygones_enclaves

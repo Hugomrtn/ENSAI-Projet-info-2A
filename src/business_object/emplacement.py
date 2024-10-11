@@ -9,20 +9,12 @@ class Emplacement:
 
     """
 
-    def __init__(self, niveau: str, nom: str, population: int,
-                 id_com: int = None, id_reg: int = None, id_dep: int = None,
-                 id_can: int = None, id_arr: int = None) -> None:
+    def __init__(self, niveau: str, nom: str, code: int) -> None:
         """constructeur"""
 
         self.niveau = niveau
         self.nom = nom
-        self.population = population
-
-        self.id_com = id_com
-        self.id_reg = id_reg
-        self.id_dep = id_dep
-        self.id_can = id_can
-        self.id_arr = id_arr
+        self.code = code
 
     def __str__(self):
         """Permet d'afficher les informations de l'emplacement"""

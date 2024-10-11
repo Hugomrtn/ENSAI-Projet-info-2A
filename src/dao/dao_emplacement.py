@@ -111,3 +111,34 @@ class Dao_emplacement(metaclass=Singleton):
             raise
 
         return res
+
+    def obtenir_emplacement_selon_niveau_annne(self, annee, niveau) -> str:
+        """Trouve tous les emplacements selon l'année et le niveau
+
+        Parameters
+        ----------
+
+        Returns
+
+        """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_emplacement                              "
+                        "FROM emplacements                                  "
+                        "JOIN association_emplacement_contour               "
+                        "USING(id_emplacement)                              "
+                        "WHERE emplacement.niveau = %(niveau)s              "
+                        "AND association_emplacement_contour = %(annee)s;   ",
+                        {
+                            "niveau": niveau,
+                            "annee": annee,
+                        }
+                    )
+                    res = cursor.fetchall()
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return res

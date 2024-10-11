@@ -7,12 +7,11 @@ CREATE SCHEMA projet_2A;
 -- lieu
 -----------------------------------------------------
 DROP TABLE IF EXISTS lieu CASCADE ;
-CREATE TABLE projet_2A.emplacements(
-    id_emplacement UNIQUE INT, -- on utilisera le code insee
-    nom_emplacement TEXT;
-    niveau TEXT;
-    pop INT;
-    annee INT;
+CREATE TABLE projet_2A.lieu(
+    id_lieu SERIAL PRIMARY KEY
+    nom TEXT
+    niveau TEXT
+    code INT
 );
 -----------------------------------------------------
 -- points
@@ -20,8 +19,8 @@ CREATE TABLE projet_2A.emplacements(
 DROP TABLE IF EXISTS points CASCADE ;
 CREATE TABLE projet_2A.points(
     id_point SERIAL PRIMARY KEY,
-    long FLOAT;
-    lat FLOAT;
+    long FLOAT,
+    lat FLOAT,
 );
 -----------------------------------------------------
 -- polygones
@@ -37,17 +36,31 @@ DROP TABLE IF EXISTS association_polygone_points CASCADE ;
 CREATE TABLE projet_2A.association_polygone_points(
     id_polygone FOREIGN KEY REFERENCES polygones(id_polygone),
     id_point FOREIGN KEY REFERENCES points(id_point),
-    ordre INT
+    ordre INT,
 );
 -----------------------------------------------------
--- delimitations
+-- contour
 -----------------------------------------------------
-DROP TABLE IF EXISTS delimitations CASCADE ;
-CREATE TABLE projet_2A.delimitations(
+DROP TABLE IF EXISTS contours CASCADE ;
+CREATE TABLE projet_2A.contours(
+    id_contour SERIAL PRIMARY KEY,
 );
 -----------------------------------------------------
--- relations
+-- association_polygone_points
 -----------------------------------------------------
-DROP TABLE IF EXISTS relations CASCADE ;
-CREATE TABLE projet_2A.relations(
+DROP TABLE IF EXISTS association_contours_polygones CASCADE ;
+CREATE TABLE projet_2A.association_contours_polygones(
+    id_contour FOREIGN KEY REFERENCES contour(id_contour),
+    id_polygone FOREIGN KEY REFERENCES polygones(id_polygone),
+    appartient BOOLEAN,
+);
+-----------------------------------------------------
+-- association_lieu_contour
+-----------------------------------------------------
+DROP TABLE IF EXISTS association_lieu_contour CASCADE ;
+CREATE TABLE projet_2A.association_lieu_contour(
+    id_lieu FOREIGN KEY REFERENCES lieu(id_lieu),
+    annee INT,
+    id_contour FOREIGN KEY REFERENCES contour(id_contour),
+    pop INT,
 );

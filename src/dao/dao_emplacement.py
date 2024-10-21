@@ -183,7 +183,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res == 1
 
-    def supprimer(self, id_emplacement) -> bool:
+    def supprimer_emplacement(self, id_emplacement) -> bool:
         """Suppression d'un emplacement dans la base de données
 
         Parameters

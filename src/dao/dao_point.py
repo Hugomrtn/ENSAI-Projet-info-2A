@@ -68,10 +68,9 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO points(id_point,                   "
-                        "x, y) VALUES                                   "
-                        "(%(x)s, %(y)s)                                 "
-                        "RETURNING id_point;                            ",
+                        "INSERT INTO points(x, y) VALUES                    "
+                        "(%(x)s, %(y)s)                                     "
+                        "RETURNING id_point;                                ",
                         {
                             "x": point.x,
                             "y": point.y,
@@ -111,7 +110,7 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT point.latitude, point.longitude             "
+                        "SELECT point.x, point.y                            "
                         "FROM point JOIN association_polygone_point         "
                         "USING(id_point)                                    "
                         "WHERE id_polygone = %(id_polygone)s                "
@@ -128,6 +127,6 @@ class Dao_point(metaclass=Singleton):
         liste_points = []
 
         for i in range(res):
-            liste_points.append(Point(res["latitude"][i], res["longitude"][i]))
+            liste_points.append(Point(res["x"][i], res["y"][i]))
 
         return liste_points

@@ -8,6 +8,3 @@ class Point:
     def __init__(self, x, y) -> None:
         self.x = x
         self.y = y
-
-    def transformation_en_liste_de_points():
-        pass

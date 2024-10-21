@@ -1,9 +1,3 @@
-# ON PEUT STOCKER TOUS LES POINTS INDIVIDUELLEMENT
-# ET POUR STOCKER UNE LISTE, ON POURRA JUSTE STOCKER A LA SUITE DANS UN
-# MEME INT PAR EX TOUS LES ID DES POINTS DANS LE BON ORDRE
-
-# Associe les polygones qui forment un contour et ceux à soustraire
-
 import logging
 
 from utils.singleton import Singleton
@@ -11,11 +5,15 @@ from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
 
-from business_object.contour import Contour
-
 
 class Dao_contour(metaclass=Singleton):
     def creer(self):
+        pass
+
+    def modifier(self):
+        pass
+
+    def supprimer(self):
         pass
 
     @log

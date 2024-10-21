@@ -19,8 +19,8 @@ CREATE TABLE projet_2A.emplacement(
 DROP TABLE IF EXISTS points CASCADE ;
 CREATE TABLE projet_2A.points(
     id_point SERIAL PRIMARY KEY,
-    long FLOAT,
-    lat FLOAT,
+    x FLOAT,
+    y FLOAT,
 );
 -----------------------------------------------------
 -- polygones

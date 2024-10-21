@@ -67,5 +67,62 @@ def data_to_list_poly_point(path):
     return Liste_Polygone, Liste_X, Liste_Y
 
 
-P, X, Y = data_to_list_poly_point("1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_RGAF09UTM20_GLP-ED2024-09-18/CANTON.shp")
+def get_annee(path):
+    """
+    Recupere l'annee du chemin.
+    -----------------
+    Parameters:
+        path : str, le chemin du fichier
 
+    -----------------
+    Returns :
+        annee : int, l'annee des differentes informations
+    """
+    return path[20:24]
+
+
+def get_niveau(path):
+    """
+    Recupere le niveau du chemin.
+    -----------------
+    Parameters:
+        path : str, le chemin du fichier
+
+    -----------------
+    Returns :
+        niveau : str, le niveau des differentes informations
+    """
+    n = len(path)
+    return path[75: n - 4]
+
+
+def get_info(path):
+    """
+    Extrait les données du .shp afin de les transférer
+    plus tard dans une bdd
+    ----------------
+    Parameters:
+        path : str, le chemin du fichier.shp à traiter
+
+    ----------------
+    Returns:
+        Population : int, le nombre d'habitants suivant le niveau, -1 sinon
+        Code_INSEE : int, le code insee suivant le niveau, -1 sinon
+    """
+    niveau = get_niveau(path)
+    data, n = open_shp(path)
+    Liste_Code_INSEE = []
+    Liste_Population = []
+    for feature in data:
+        prop = feature["properties"]
+        if "POPULATION" in prop:
+            Population = prop["POPULATION"]
+            Liste_Population.append(Population)
+        else:
+            Liste_Population.append(-1)
+        if "INSEE_" + niveau[:3] in prop:
+            Code_INSEE = prop["INSEE_" + niveau[:3]]
+            Liste_Code_INSEE.append(Code_INSEE)
+        else:
+            Liste_Code_INSEE.append(-1)
+    return Liste_Population, Liste_Code_INSEE

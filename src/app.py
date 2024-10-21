@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from logging import info
 
+from business_object.point import Point
+
 from service.emplacement_service import EmplacementService
 from service.contour_service import ContourService
 from service.polygone_service import PolygoneService

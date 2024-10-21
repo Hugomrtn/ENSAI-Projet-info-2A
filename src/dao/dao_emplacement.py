@@ -151,7 +151,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         Parameters
         ----------
-        
+
 
         Returns
         -------
@@ -173,7 +173,7 @@ class Dao_emplacement(metaclass=Singleton):
                         {
                             "niveau": nouveau_niveau,
                             "nom": nouveau_nom,
-                            "code": nouveau.code,
+                            "code": nouveau_code,
                             "id_emplacement": id_emplacement,
                         },
                     )
@@ -188,7 +188,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         Parameters
         ----------
-        
+
 
         Returns
         -------

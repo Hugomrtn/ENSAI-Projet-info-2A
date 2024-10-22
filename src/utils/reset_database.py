@@ -20,8 +20,7 @@ class ResetDatabase(metaclass=Singleton):
 
     @log
     def lancer(self):
-        """Lancement de la réinitialisation des données
-        Si test_dao = True : réinitialisation des données de test"""
+        """Lancement de la réinitialisation des données"""
 
         dotenv.load_dotenv()
 

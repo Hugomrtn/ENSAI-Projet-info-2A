@@ -10,47 +10,11 @@ from dao.db_connection import DBConnection
 from business_object.point import Point
 
 
-class Dao_point(metaclass=Singleton):
+class Dao_polygone(metaclass=Singleton):
 
     @log
     def creer(self, point: Point) -> bool:
-        """Création d'un point dans la base de données
-            Parameters
-            ----------
-            point : Point
-
-            Returns
-            -------
-            created : bool
-                True si la création est un succès
-                False sinon
-            """
-
-        res = None
-
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "INSERT INTO points(id_point,                   "
-                        "x, y) VALUES                                   "
-                        "(%(x)s, %(y)s)                                 "
-                        "RETURNING id_point;                            ",
-                        {
-                            "x": point.x,
-                            "y": point.y,
-                        },
-                    )
-                    res = cursor.fetchone()
-        except Exception as e:
-            logging.info(e)
-
-        created = False
-        if res:
-            point.id_point = res["id_point"]
-            created = True
-
-        return created
+        pass
 
     @log
     def association_polygone_points(id_polygone, liste_id_point: list):
@@ -150,7 +114,7 @@ class Dao_point(metaclass=Singleton):
 
         liste_id_polygones_composants = []
 
-        for i in range(liste_id_polygones_composants):
+        for i in range(res):
             liste_id_polygones_composants.append(res["id_polygone"][i])
 
         return liste_id_polygones_composants
@@ -184,7 +148,7 @@ class Dao_point(metaclass=Singleton):
 
         liste_id_polygones_enclaves = []
 
-        for i in range(liste_id_polygones_enclaves):
+        for i in range(res):
             liste_id_polygones_enclaves.append(res["id_polygone"][i])
 
         return liste_id_polygones_enclaves

@@ -2,13 +2,13 @@
 
 import logging
 
-from utils.singleton import Singleton
-from utils.log_decorator import log
+from src.utils.singleton import Singleton
+from src.utils.log_decorator import log
 
-from dao.db_connection import DBConnection
-from dao.dao_point import Dao_point
+from src.dao.db_connection import DBConnection
+from src.dao.dao_point import Dao_point
 
-from business_object.polygone import Polygone
+from src.business_object.polygone import Polygone
 
 
 class Dao_polygone(metaclass=Singleton):

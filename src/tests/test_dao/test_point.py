@@ -1,8 +1,11 @@
-import pytest
 import os
+import pytest
 from unittest.mock import patch, MagicMock
-from dao.dao_point import Dao_point
 from business_object.point import Point
+from dao.dao_point import Dao_point
+
+# Erreur d'import dans le dao.dao_point mais
+# Je comprends pas pourquoi
 
 
 @pytest.fixture(scope="session", autouse=True)

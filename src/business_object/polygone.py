@@ -1,5 +1,5 @@
-from business_object.point import Point
-from business_object.segment import Segment
+from src.business_object.point import Point
+from src.business_object.segment import Segment
 
 
 class Polygone:

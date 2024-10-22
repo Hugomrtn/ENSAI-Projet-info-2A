@@ -55,7 +55,14 @@ def data_to_list(path):
     PointDAO = Dao_point()
     for i in range(n):
         Population, Code_Insee, Nom = get_info(path, i)
-        emplacement_id = EmplacementDAO.creer()
+        Emplacement = [
+            Nom,
+            get_niveau(path),
+            Population,
+            get_annee(path),
+            Code_Insee
+            ]
+        emplacement_id = EmplacementDAO.creer(Emplacement)
         Emplacement = [
             emplacement_id,
             Nom,
@@ -77,22 +84,21 @@ def data_to_list(path):
             Poly_Composant.append(Poly)
             for point in geometry[0]:
                 PointDAO = Dao_point()
-                Point_id = PointDAO.creer()
                 X = point[0]
                 Y = point[1]
+                Point_id = PointDAO.creer([X, Y])
                 Point = [Point_id, X, Y]
                 Points.append(Point)
         else:       # Un Multi-Polygone
             for multi_polygon in geometry:
-                print(multi_polygon)
                 for polygon in multi_polygon[0]:
                     id_poly = PolygoneDAO.creer()
                     Poly = [id_poly, polygon]
                     Poly_Enclave.append(Poly)
                     for point in multi_polygon[0]:
-                        Point_id = PointDAO.creer()
                         X = point[0]
                         Y = point[1]
+                        Point_id = PointDAO.creer([X, Y])
                         Point = [Point_id, X, Y]
                         Points.append(Point)
     return Emplacement, Contour, Polygones, Points
@@ -150,10 +156,14 @@ def get_info(path, i):
         Code_INSEE = prop["INSEE_" + niveau[:3]]
     else:
         Code_INSEE = -1
-    return Population, Code_INSEE
+    if "NOM_M" in prop:
+        Nom = prop["NOM_M"]
+    else:
+        Nom = "Pas de Nom"
+
+    return Population, Code_INSEE, Nom
 
 
-path = "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-\
-    09-18/REGION.shp"
-data, n = open(path)
-print(data[0]["geometry"])
+path = "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-09-18/REGION.shp"
+Emplacement, Contour, Polygones, Points = data_to_list(path)
+print(Emplacement)

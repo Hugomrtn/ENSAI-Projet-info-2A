@@ -1,4 +1,4 @@
-from business_object.polygone import Polygone
+from src.business_object.polygone import Polygone
 
 
 class Contour:

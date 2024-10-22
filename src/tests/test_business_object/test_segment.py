@@ -37,4 +37,3 @@ def test_segment_coupe_a_droite_vertical(segment_vertical):
     assert segment_vertical.coupe_a_droite(point_right) == 0
     assert segment_vertical.coupe_a_droite(point_on_segment) == 0
     assert segment_vertical.coupe_a_droite(point_on_segment_above) == 1
-

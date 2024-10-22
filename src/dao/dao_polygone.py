@@ -127,10 +127,16 @@ class Dao_point(metaclass=Singleton):
 
         Parameters
         ----------
+        id_contour : int
+            ID d'un contour
 
         Returns
-
+        liste_id_polygones_composants : list of int
+            Liste des ID des polygones composants
+            (polygone qui delimite l'exterieur de l'emplacement
+            et polygones qui delimitent des enclaves a l'exterieur)
         """
+
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:

@@ -50,6 +50,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res["id_emplacement"]
 
+    @log
     def creer_association_emplacement_contour(self,
                                               id_emplacement, annee: int,
                                               id_contour, pop: int):
@@ -72,6 +73,7 @@ class Dao_emplacement(metaclass=Singleton):
         except Exception as e:
             logging.info(e)
 
+    @log
     def creer_entierement_emplacement(self, emplacement: Emplacement,
                                       id_contour):
 
@@ -82,6 +84,7 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Obtenir informations
 
+    @log
     def obtenir_nom(self, id_emplacement) -> str:
         """trouver le nom d'un emplacement grace à son id
 
@@ -110,6 +113,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res["nom_emplacement"]
 
+    @log
     def obtenir_informations(self, id_emplacement) -> str:
         """trouver un emplacement grace à son id
 
@@ -177,6 +181,7 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Modifications&Suppressions
 
+    @log
     def modifier_emplacement(self, id_emplacement, nouveau_nom,
                              nouveau_niveau, nouveau_code) -> bool:
         """Modification d'un emplacement dans la base de données
@@ -215,6 +220,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res == 1
 
+    @log
     def supprimer_emplacement(self, id_emplacement) -> bool:
         """Suppression d'un emplacement dans la base de données
 

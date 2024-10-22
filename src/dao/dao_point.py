@@ -10,6 +10,53 @@ from business_object.point import Point
 
 class Dao_point(metaclass=Singleton):
 
+    # ############################################# Créations
+
+    @log
+    def creer(self, point: Point) -> bool:
+
+        existe = Dao_point.existe(point)
+        if existe[0]:
+            return existe[0]
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO points(x, y) VALUES                    "
+                        "(%(x)s, %(y)s)                                     "
+                        "RETURNING id_point;                                ",
+                        {
+                            "x": point.x,
+                            "y": point.y,
+                        },
+                    )
+                    res = cursor.fetchone()
+        except Exception as e:
+            logging.info(e)
+
+        return res["id_point"]
+
+    @log
+    def creer_liste_de_points(liste: list):
+        """Appliquer la fonction creer sur une liste de points
+            Parameters
+            ----------
+            liste : list of Point
+
+            Returns
+            -------
+            res: list (des IDs)
+            """
+        res = []
+        for i in range(len(liste)):
+            res.append(Dao_point.creer(liste[i]))
+        return res
+
+    # ############################################# Existence
+
     @log
     def existe(self, point: Point) -> bool:
         """Vérifie si un point existe déjà dans la base de données
@@ -44,58 +91,7 @@ class Dao_point(metaclass=Singleton):
 
         return [existe, id_point]
 
-    @log
-    def creer(self, point: Point) -> bool:
-        """Création d'un point dans la base de données
-            Parameters
-            ----------
-            point : Point
-
-            Returns
-            -------
-            created : bool
-                True si la création est un succès
-                False sinon
-            """
-
-        existe = Dao_point.existe(point)
-        if existe[0]:
-            return existe[0]
-
-        res = None
-
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "INSERT INTO points(x, y) VALUES                    "
-                        "(%(x)s, %(y)s)                                     "
-                        "RETURNING id_point;                                ",
-                        {
-                            "x": point.x,
-                            "y": point.y,
-                        },
-                    )
-                    res = cursor.fetchone()
-        except Exception as e:
-            logging.info(e)
-
-        return res["id_point"]
-
-    def creer_liste_de_points(liste: list):
-        """Appliquer la fonction creer sur une liste de points
-            Parameters
-            ----------
-            liste : list of Point
-
-            Returns
-            -------
-            res: list (des IDs)
-            """
-        res = []
-        for i in range(len(liste)):
-            res.append(Dao_point.creer(liste[i]))
-        return res
+    # ############################################# Obtenir informations
 
     @log
     def obtenir_points_ordonnes_selon_id_polygone(self, id_polygone):
@@ -130,3 +126,30 @@ class Dao_point(metaclass=Singleton):
             liste_points.append(Point(res["x"][i], res["y"][i]))
 
         return liste_points
+
+    @log
+    def obtenir_id_selon_point(self, point: Point):
+
+        informations_existence = Dao_point.existe(point)
+        if informations_existence[0]:
+            return informations_existence[1]
+
+    @log
+    def obtenir_point_selon_id(self, id_point):
+
+        res = None
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT x, y FROM point WHERE id_point = %(id_point)s",
+                        {
+                            "id_point": id_point,
+                        },
+                    )
+                    res = cursor.fetchone()
+                    if res:
+                        return Point(res["x"], res["y"])
+
+        except Exception as e:
+            logging.info(e)

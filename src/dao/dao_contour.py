@@ -105,6 +105,7 @@ class Dao_contour(metaclass=Singleton):
 
     # ############################################# Modifications&Suppressions
 
+    @log
     def supprimer(self, id_contour):
         """Suppression d'un contour dans la base de données
 

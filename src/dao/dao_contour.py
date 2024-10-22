@@ -4,11 +4,15 @@ from utils.singleton import Singleton
 from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
+from dao.dao_polygone import Dao_polygone
+
 from business_object.contour import Contour
 
 
 class Dao_contour(metaclass=Singleton):
-    def creer(self, contour: Contour):
+
+    @log
+    def creer(self):
 
         """Création d'un contour dans la base de données
             Parameters
@@ -16,9 +20,6 @@ class Dao_contour(metaclass=Singleton):
 
             Returns
             -------
-            created : bool
-                True si la création est un succès
-                False sinon
             """
 
         res = None
@@ -27,27 +28,50 @@ class Dao_contour(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO contour(id_contour) VALUES    "
-                        "(%(id_contour)s)                "
-                        "RETURNING id_contour;                      ",
-                        {
-                            "id_contour": contour.id_contour,
-                        },
+                        "INSERT INTO contour DEFAULT VALUES"
+                        "RETURNING id_contour;",
                     )
                     res = cursor.fetchone()
         except Exception as e:
             logging.info(e)
 
-        created = False
-        if res:
-            contour.id_contour = res["id_contour"]
-            created = True
+        return res["id_contour"]
 
-        return created
+    @log
+    def creer_association_polygone_contour(self, id_contour, id_polygone,
+                                           appartient):
 
-    def modifier(self):
-        pass
-    # pour l'instant on fait pas, car on préfère supprimer puis ajouter plutôt que modifier
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO association_contours_polygones(        "
+                        "id_contour, id_polygone, appartient) VALUES        "
+                        "(%(id_contour)s, %(id_polygone)s, %(appartient)s)  ",
+                        {
+                            "id_contour": id_contour,
+                            "id_polygone": id_polygone,
+                            "appartient": appartient,
+                        },
+                    )
+        except Exception as e:
+            logging.info(e)
+
+    @log
+    def creer_entierement_contour(self, contour: Contour):
+        id_contour = Dao_contour.creer()
+
+        for polygone in contour.polygones_composants:
+            id_polygones_composants = \
+                Dao_polygone.creer_entierement_polygone(polygone)
+            Dao_contour.creer_association_polygone_contour(
+                id_contour, id_polygones_composants, True)
+
+        for polygone in contour.polygones_enclaves:
+            id_polygones_enclaves = \
+                Dao_polygone.creer_entierement_polygone(polygone)
+            Dao_contour.creer_association_polygone_contour(
+                id_contour, id_polygones_enclaves, False)
 
     def supprimer(self, id_contour):
         """Suppression d'un contour dans la base de données

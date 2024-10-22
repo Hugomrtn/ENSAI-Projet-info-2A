@@ -86,6 +86,7 @@ class Dao_polygone(metaclass=Singleton):
             -------
             id_polygone
             """
+
         id_polygone = Dao_polygone.creer()
 
         for i in range(polygone.liste_points):
@@ -96,7 +97,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return id_polygone
 
-# ############################ existence pas sur
+# ############################ NE MARCHE PAS A PRIORI
 
     @log
     def existe_polygone(liste_id_point: list) -> bool:
@@ -134,6 +135,21 @@ class Dao_polygone(metaclass=Singleton):
             return False
 
         return res is not None
+
+    def existe(self, polygone: Polygone):
+
+        id_polygone = None
+        existence_polygone = True
+
+        liste_id_points = []
+        for point in polygone.liste_points:
+            existence_point = Dao_point.existe(point)
+            liste_id_points.append(existence_point[1])
+            if not existence_point[0]:
+                existence_polygone = False
+                break
+        if not existence_polygone:
+            return [False, id_polygone]
 
     # #######################################
 

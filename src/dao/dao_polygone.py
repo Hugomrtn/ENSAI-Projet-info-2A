@@ -96,34 +96,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return id_polygone
 
-    @log
-    def association_polygone_points(id_polygone, liste_id_point: list):
-        """Création de la table d'association dans la base de données
-        entre polygone et les points avec ordre
-        Parameters
-        ----------
-        liste : list of (IDs)
-
-        Returns
-        -------
-        """
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    for i in range(len(liste_id_point)):
-                        cursor.execute(
-                            "INSERT INTO association_polygone_points(       "
-                            "id_polygone, id_point, ordre) VALUES           "
-                            "(%(id_polygone)s, %(id_point)s, %(ordre)s);    ",
-                            {
-                                "id_polygone": id_polygone,
-                                "id_point": liste_id_point[i],
-                                "ordre": i
-                            },
-                        )
-        except Exception as e:
-            logging.info(e)
-# ############################@ pas sûr
+# ############################ existence pas sur
 
     @log
     def existe_polygone(liste_id_point: list) -> bool:

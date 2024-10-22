@@ -3,64 +3,71 @@
 --------------------------------------------------------------
 DROP SCHEMA IF EXISTS projet_2A CASCADE;
 CREATE SCHEMA projet_2A;
+
 -----------------------------------------------------
 -- emplacement
 -----------------------------------------------------
-DROP TABLE IF EXISTS emplacement CASCADE ;
+DROP TABLE IF EXISTS projet_2A.emplacement CASCADE;
 CREATE TABLE projet_2A.emplacement(
-    id_emplacement SERIAL PRIMARY KEY
-    nom TEXT
-    niveau TEXT
+    id_emplacement SERIAL PRIMARY KEY,
+    nom TEXT,
+    niveau TEXT,
     code INT
 );
+
 -----------------------------------------------------
 -- points
 -----------------------------------------------------
-DROP TABLE IF EXISTS points CASCADE ;
+DROP TABLE IF EXISTS projet_2A.points CASCADE;
 CREATE TABLE projet_2A.points(
     id_point SERIAL PRIMARY KEY,
     x FLOAT,
-    y FLOAT,
+    y FLOAT
 );
+
 -----------------------------------------------------
 -- polygones
 -----------------------------------------------------
-DROP TABLE IF EXISTS polygone CASCADE ;
+DROP TABLE IF EXISTS projet_2A.polygone CASCADE;
 CREATE TABLE projet_2A.polygone(
-    id_polygone SERIAL PRIMARY KEY,
+    id_polygone SERIAL PRIMARY KEY
 );
+
 -----------------------------------------------------
 -- association_polygone_points
 -----------------------------------------------------
-DROP TABLE IF EXISTS association_polygone_points CASCADE ;
+DROP TABLE IF EXISTS projet_2A.association_polygone_points CASCADE;
 CREATE TABLE projet_2A.association_polygone_points(
-    id_polygone FOREIGN KEY REFERENCES polygones(id_polygone),
-    id_point FOREIGN KEY REFERENCES points(id_point),
-    ordre INT,
+    id_polygone INT REFERENCES projet_2A.polygone(id_polygone),
+    id_point INT REFERENCES projet_2A.points(id_point),
+    ordre INT
 );
+
 -----------------------------------------------------
 -- contour
 -----------------------------------------------------
-DROP TABLE IF EXISTS contour CASCADE ;
+DROP TABLE IF EXISTS projet_2A.contour CASCADE;
 CREATE TABLE projet_2A.contour(
-    id_contour SERIAL PRIMARY KEY,
+    id_contour SERIAL PRIMARY KEY
 );
+
 -----------------------------------------------------
--- association_polygone_points
+-- association_contours_polygones
 -----------------------------------------------------
-DROP TABLE IF EXISTS association_contours_polygones CASCADE ;
+DROP TABLE IF EXISTS projet_2A.association_contours_polygones CASCADE;
 CREATE TABLE projet_2A.association_contours_polygones(
-    id_contour FOREIGN KEY REFERENCES contour(id_contour),
-    id_polygone FOREIGN KEY REFERENCES polygones(id_polygone),
-    appartient BOOLEAN,
+    id_contour INT REFERENCES projet_2A.contour(id_contour),
+    id_polygone INT REFERENCES projet_2A.polygone(id_polygone),
+    appartient BOOLEAN
 );
+
 -----------------------------------------------------
 -- association_emplacement_contour
 -----------------------------------------------------
-DROP TABLE IF EXISTS association_emplacement_contour CASCADE ;
+DROP TABLE IF EXISTS projet_2A.association_emplacement_contour CASCADE;
 CREATE TABLE projet_2A.association_emplacement_contour(
-    id_emplacement FOREIGN KEY REFERENCES emplacement(id_emplacement),
+    id_emplacement INT REFERENCES projet_2A.emplacement(id_emplacement),
     annee INT,
-    id_contour FOREIGN KEY REFERENCES contour(id_contour),
-    pop INT,
+    id_contour INT REFERENCES projet_2A.contour(id_contour),
+    pop INT
 );

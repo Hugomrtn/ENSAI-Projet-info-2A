@@ -1,7 +1,16 @@
-from utils.log_decorator import log
-from utils.singleton import Singleton
+import sys
+import os
 
-from dao.db_connection import DBConnection
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import logging # noqa
+import dotenv # noqa
+
+from unittest import mock # noqa
+
+from utils.log_decorator import log # noqa
+from utils.singleton import Singleton # noqa
+from dao.db_connection import DBConnection # noqa
 
 
 class ResetDatabase(metaclass=Singleton):
@@ -11,20 +20,22 @@ class ResetDatabase(metaclass=Singleton):
 
     @log
     def lancer(self):
-        print("Ré-initialisation de la base de données")
+        """Lancement de la réinitialisation des données
+        Si test_dao = True : réinitialisation des données de test"""
 
-        init_db = open("data/init_db.sql", encoding="utf-8")
+        dotenv.load_dotenv()
+
+        init_db = open("src/data/init_db.sql", encoding="utf-8")
         init_db_as_string = init_db.read()
+        init_db.close()
 
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(init_db_as_string)
         except Exception as e:
-            print(e)
+            logging.info(e)
             raise
-
-        print("Ré-initialisation de la base de données - Terminée")
 
         return True
 

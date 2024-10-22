@@ -1,4 +1,8 @@
 import fiona
+from src.dao.dao_emplacement import Dao_emplacement
+from src.dao.dao_contour import Dao_contour
+from src.dao_polygone import Dao_polygone
+from src.dao_point import Dao_point
 
 
 def open_shp(path):
@@ -29,10 +33,10 @@ def reconnaissance_polygon(data, i):
         return b
 
 
-def data_to_list_poly_point(path):
+def data_to_list(path):
     """
-    Extrait les données du .shp vers une liste de float
-    afin de les transférer plus tard dans une bdd
+    Extrait les données du .shp vers une liste
+    afin de les transférer dans une bdd
     ----------------
     Parameters:
         path : str, le chemin du fichier.shp à traiter
@@ -45,26 +49,53 @@ def data_to_list_poly_point(path):
     """
 
     data, n = open_shp(path)
-    print(data)
-    Liste_Polygone = []
-    Liste_X = []
-    Liste_Y = []
+    EmplacementDAO = Dao_emplacement()
+    ContourDAO = Dao_contour()
+    PolygoneDAO = Dao_polygone()
+    PointDAO = Dao_point()
     for i in range(n):
+        Population, Code_Insee, Nom = get_info(path, i)
+        emplacement_id = EmplacementDAO.creer()
+        Emplacement = [
+            emplacement_id,
+            Nom,
+            get_niveau(path),
+            Population,
+            get_annee(path),
+            Code_Insee
+            ]
+        contour_id = ContourDAO.creer()
+        Contour = [contour_id]
         geometry = data[i]["geometry"]["coordinates"]
-
-        if reconnaissance_polygon(data, i):
-            Liste_Polygone.append(geometry)
+        Points = []
+        Poly_Composant = []
+        Poly_Enclave = []
+        Polygones = [Poly_Composant, Poly_Enclave]
+        if reconnaissance_polygon(data, i):     # Un Polygone simple
+            id_poly = PolygoneDAO.creer()
+            Poly = [id_poly, geometry[0]]
+            Poly_Composant.append(Poly)
             for point in geometry[0]:
-                Liste_X.append(point[0])
-                Liste_Y.append(point[1])
-        else:
+                PointDAO = Dao_point()
+                Point_id = PointDAO.creer()
+                X = point[0]
+                Y = point[1]
+                Point = [Point_id, X, Y]
+                Points.append(Point)
+        else:       # Un Multi-Polygone
             for multi_polygon in geometry:
+                print(multi_polygon)
                 for polygon in multi_polygon[0]:
-                    Liste_Polygone.append(polygon)
+                    id_poly = PolygoneDAO.creer()
+                    Poly = [id_poly, polygon]
+                    Poly_Enclave.append(Poly)
                     for point in multi_polygon[0]:
-                        Liste_X.append(point[0])
-                        Liste_Y.append(point[1])
-    return Liste_Polygone, Liste_X, Liste_Y
+                        Point_id = PointDAO.creer()
+                        X = point[0]
+                        Y = point[1]
+                        Point = [Point_id, X, Y]
+                        Points.append(Point)
+    return Emplacement, Contour, Polygones, Points
 
 
 def get_annee(path):
@@ -96,10 +127,9 @@ def get_niveau(path):
     return path[75: n - 4]
 
 
-def get_info(path):
+def get_info(path, i):
     """
-    Extrait les données du .shp afin de les transférer
-    plus tard dans une bdd
+    Extrait les données du .shp afin de les transférer selon chaque ligne
     ----------------
     Parameters:
         path : str, le chemin du fichier.shp à traiter
@@ -111,18 +141,18 @@ def get_info(path):
     """
     niveau = get_niveau(path)
     data, n = open_shp(path)
-    Liste_Code_INSEE = []
-    Liste_Population = []
-    for feature in data:
-        prop = feature["properties"]
-        if "POPULATION" in prop:
-            Population = prop["POPULATION"]
-            Liste_Population.append(Population)
-        else:
-            Liste_Population.append(-1)
-        if "INSEE_" + niveau[:3] in prop:
-            Code_INSEE = prop["INSEE_" + niveau[:3]]
-            Liste_Code_INSEE.append(Code_INSEE)
-        else:
-            Liste_Code_INSEE.append(-1)
-    return Liste_Population, Liste_Code_INSEE
+    prop = data[i]["properties"]
+    if "POPULATION" in prop:
+        Population = prop["POPULATION"]
+    else:
+        Population = -1
+    if "INSEE_" + niveau[:3] in prop:
+        Code_INSEE = prop["INSEE_" + niveau[:3]]
+    else:
+        Code_INSEE = -1
+    return Population, Code_INSEE
+
+
+path = "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-09-18/REGION.shp"
+data, n = open(path)
+print(data[0]["geometry"])

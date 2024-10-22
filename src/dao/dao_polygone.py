@@ -6,15 +6,98 @@ from utils.singleton import Singleton
 from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
+from dao.dao_point import Dao_point
 
-from business_object.point import Point
+from business_object.polygone import Polygone
+
 
 
 class Dao_polygone(metaclass=Singleton):
 
     @log
-    def creer(self, point: Point) -> bool:
-        pass
+    def creer(self):
+
+        """Création d'un polygone dans la base de données
+        Sans dire les points qui le constitue (donc juste creation de l'ID)
+            Parameters
+            ----------
+
+            Returns
+            -------
+            id_polygone : int
+                ID du polygone cree (ID cree automatiquement)
+            """
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO polygone DEFAULT VALUES"
+                        "RETURNING id_polygone;",
+                    )
+                    res = cursor.fetchone()
+        except Exception as e:
+            logging.info(e)
+
+        return res["id_polygone"]
+
+    def creer_association_polygone_point(self, id_polygone, id_point,
+                                           ordre):
+        """Création d'un lien entre un polygone et un point 
+            (un polygone pourra avoir plusieurs liens) dans la base de données
+            Parameters
+            ----------
+            id_polygone : int
+                ID du polygone a associer
+            id_point : int
+                ID du point a associer
+            ordre : int
+                Numero pour savoir le rang du polygone
+                (1 signifie que c'est le polygone principal
+                2 ou plus signifie que c'est une enclave a l'interieur
+                du polygone principal)
+
+            Returns
+            -------
+            """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO association_polygone_points(        "
+                        "id_polygone, id_point, ordre) VALUES        "
+                        "(%(id_polygone)s, %(id_point)s, %(ordre)s)  ",
+                        {
+                            "id_polygone": id_polygone,
+                            "id_point": id_point,
+                            "ordre": ordre,
+                        },
+                    )
+        except Exception as e:
+            logging.info(e)
+
+    def creer_entierement_polygone(self, polygone: Polygone):
+        """Création complete d'un polygone dans la base de données
+        (avec les points qui le composent)
+            Parameters
+            ----------
+            Returns
+            -------
+            id_polygone
+            """
+        id_polygone = Dao_polygone.creer()
+
+        k = 0
+        for point in polygone.liste_points:
+            id_point = Dao_point.creer(point) #sachant que creer le point renvoie l'id
+            Dao_polygone.creer_association_polygone_point(
+                id_polygone, id_point, k
+            )
+            k += 1
+
+        return polygone.id_polygone
 
     @log
     def association_polygone_points(id_polygone, liste_id_point: list):

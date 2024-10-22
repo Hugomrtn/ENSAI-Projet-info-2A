@@ -21,7 +21,7 @@ class Dao_contour(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO contour DEFAULT VALUES"
+                        "INSERT INTO projet_2A.contour DEFAULT VALUES"
                         "RETURNING id_contour;",
                     )
                     res = cursor.fetchone()
@@ -38,7 +38,7 @@ class Dao_contour(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO association_contours_polygones(        "
+                        "INSERT INTO projet_2A.association_contours_polygones(        "
                         "id_contour, id_polygone, appartient) VALUES        "
                         "(%(id_contour)s, %(id_polygone)s, %(appartient)s)  ",
                         {
@@ -86,7 +86,7 @@ class Dao_contour(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_contour                                  "
-                        "FROM association_emplacement_contour               "
+                        "FROM projet_2A.association_emplacement_contour               "
                         "WHERE id_emplacement = %(id_emplacement)s          "
                         "AND annee = %(annee)s;                             ",
                         {
@@ -123,14 +123,14 @@ class Dao_contour(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Supprimer le contour
                     cursor.execute(
-                        "DELETE FROM contour                  "
+                        "DELETE FROM projet_2A.contour                  "
                         " WHERE id_contour=%(id_contour)s      ",
                         {"id_contour": id_contour},
                     )
                     # supprime aussi toutes les assocations entre un polygone
                     # et un contour
                     cursor.execute(
-                        " DELETE FROM association_contour_polygones"
+                        " DELETE FROM projet_2A.association_contour_polygones"
                         " WHERE id_contour=%(id_contour)s      ",
                         {"id_contour": id_contour},
                     )

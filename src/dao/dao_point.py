@@ -12,10 +12,10 @@ class Dao_point(metaclass=Singleton):
 
     # ############################################# Créations
 
-    @log
+
     def creer(self, point: Point) -> bool:
 
-        existe = Dao_point.existe(point)
+        existe = Dao_point().existe(point)
         if existe[0]:
             return existe[0]
 
@@ -25,7 +25,7 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO points(x, y) VALUES                    "
+                        "INSERT INTO projet_2A.points(x, y) VALUES                    "
                         "(%(x)s, %(y)s)                                     "
                         "RETURNING id_point;                                ",
                         {
@@ -39,7 +39,7 @@ class Dao_point(metaclass=Singleton):
 
         return res["id_point"]
 
-    @log
+
     def creer_liste_de_points(liste: list):
         """Appliquer la fonction creer sur une liste de points
             Parameters
@@ -57,7 +57,7 @@ class Dao_point(metaclass=Singleton):
 
     # ############################################# Existence
 
-    @log
+
     def existe(self, point: Point) -> bool:
         """Vérifie si un point existe déjà dans la base de données
             Parameters
@@ -77,7 +77,7 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT id_point FROM points WHERE x = %(x)s    "
+                        "SELECT id_point FROM projet_2A.points WHERE x = %(x)s    "
                         "AND y = %(y)s;                                 ",
                         {
                             "x": point.x,
@@ -109,7 +109,7 @@ class Dao_point(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT point.x, point.y                            "
-                        "FROM point JOIN association_polygone_point         "
+                        "FROM projet_2A.point JOIN projet_2A.association_polygone_point         "
                         "USING(id_point)                                    "
                         "WHERE id_polygone = %(id_polygone)s                "
                         "ORDER BY association_polygone_point.ordre          ",
@@ -144,7 +144,7 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT x, y FROM point WHERE id_point = %(id_point)s",
+                        "SELECT x, y FROM projet_2A.point WHERE id_point = %(id_point)s",
                         {
                             "id_point": id_point,
                         },

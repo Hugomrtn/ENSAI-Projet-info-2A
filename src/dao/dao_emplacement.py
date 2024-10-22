@@ -32,7 +32,7 @@ class Dao_emplacement(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO emplacement(id_emplacement,            "
+                        "INSERT INTO projet_2A.emplacement(id_emplacement,            "
                         "nom_emplacement, niveau, pop, annee) VALUES        "
                         "(%(id_emplacement)s, %(nom_emplacement)s,          "
                         "%(niveau)s, %(code)s)                              "
@@ -59,7 +59,7 @@ class Dao_emplacement(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO association_emplacement_contour(       "
+                        "INSERT INTO projet_2A.association_emplacement_contour(       "
                         "id_emplacement, annee, id_contour, pop) VALUES     "
                         "(%(id_emplacement)s, %(annee)s, %(id_contour)s     "
                         "%(pop)s)                                           ",
@@ -103,7 +103,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT nom_emplacement                             "
-                        "FROM emplacement                                   "
+                        "FROM projet_2A.emplacement                                   "
                         "WHERE id_emplacement = %(id_emplacement)i;         ",
                     )
                     res = cursor.fetchone()
@@ -132,7 +132,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT *                                           "
-                        "  FROM emplacement                                 "
+                        "  FROM projet_2A.emplacement                                 "
                         " WHERE id_emplacement = %(id_emplacement)i;        ",
                     )
                     res = cursor.fetchall()
@@ -157,8 +157,8 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_emplacement                              "
-                        "FROM emplacement                                   "
-                        "JOIN association_emplacement_contour               "
+                        "FROM projet_2A.emplacement                                   "
+                        "JOIN projet_2A.association_emplacement_contour               "
                         "USING(id_emplacement)                              "
                         "WHERE emplacement.niveau = %(niveau)s AND          "
                         "association_emplacement_contour.annee = %(annee)s; ",
@@ -202,7 +202,7 @@ class Dao_emplacement(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "UPDATE emplacement                                 "
+                        "UPDATE projet_2A.emplacement                                 "
                         "   SET niveau      = %(niveau)s,                   "
                         "       nom         = %(nom)s,                      "
                         "       code         = %(code)s,                    "
@@ -238,7 +238,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Supprimer l'emplacement
                     cursor.execute(
-                        "DELETE FROM emplacement                            "
+                        "DELETE FROM projet_2A.emplacement                            "
                         " WHERE id_emplacement=%(id_emplacement)s           ",
                         {"id_emplacement": id_emplacement},
                     )

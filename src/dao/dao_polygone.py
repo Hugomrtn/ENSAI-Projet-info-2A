@@ -33,7 +33,7 @@ class Dao_polygone(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO polygone DEFAULT VALUES"
+                        "INSERT INTO projet_2A.polygone DEFAULT VALUES"
                         "RETURNING id_polygone;",
                     )
                     res = cursor.fetchone()
@@ -65,7 +65,7 @@ class Dao_polygone(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO association_polygone_points(        "
+                        "INSERT INTO projet_2A.association_polygone_points(        "
                         "id_polygone, id_point, ordre) VALUES        "
                         "(%(id_polygone)s, %(id_point)s, %(ordre)s)  ",
                         {
@@ -119,7 +119,7 @@ class Dao_polygone(metaclass=Singleton):
                     cursor.execute(
                         """
                         SELECT id_polygone
-                        FROM association_polygone_points
+                        FROM projet_2A.association_polygone_points
                         WHERE id_point = ANY(%(liste_id_point)s)
                         GROUP BY id_polygone
                         HAVING array_agg(ordre ORDER BY ordre) =
@@ -174,7 +174,7 @@ class Dao_polygone(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_polygone                                 "
-                        "FROM association_contours_polygones                "
+                        "FROM projet_2A.association_contours_polygones                "
                         "WHERE id_contour = %(id_contour)s                  "
                         "AND appartient = TRUE                              ",
                         {
@@ -208,7 +208,7 @@ class Dao_polygone(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_polygone                                 "
-                        "FROM association_contours_polygones                "
+                        "FROM projet_2A.association_contours_polygones                "
                         "WHERE id_contour = %(id_contour)s                  "
                         "AND appartient = FALSE                             ",
                         {

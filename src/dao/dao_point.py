@@ -71,6 +71,8 @@ class Dao_point(metaclass=Singleton):
                 False sinon
             """
         existe = False
+        id_point = None
+
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:

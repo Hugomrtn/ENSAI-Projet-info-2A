@@ -94,7 +94,7 @@ class Dao_polygone(metaclass=Singleton):
                 id_polygone, id_point, i
             )
 
-        return polygone.id_polygone
+        return id_polygone
 
     @log
     def association_polygone_points(id_polygone, liste_id_point: list):

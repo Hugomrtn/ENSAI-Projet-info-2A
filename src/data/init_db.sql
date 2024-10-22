@@ -25,8 +25,8 @@ CREATE TABLE projet_2A.points(
 -----------------------------------------------------
 -- polygones
 -----------------------------------------------------
-DROP TABLE IF EXISTS polygones CASCADE ;
-CREATE TABLE projet_2A.polygones(
+DROP TABLE IF EXISTS polygone CASCADE ;
+CREATE TABLE projet_2A.polygone(
     id_polygone SERIAL PRIMARY KEY,
 );
 -----------------------------------------------------
@@ -41,8 +41,8 @@ CREATE TABLE projet_2A.association_polygone_points(
 -----------------------------------------------------
 -- contour
 -----------------------------------------------------
-DROP TABLE IF EXISTS contours CASCADE ;
-CREATE TABLE projet_2A.contours(
+DROP TABLE IF EXISTS contour CASCADE ;
+CREATE TABLE projet_2A.contour(
     id_contour SERIAL PRIMARY KEY,
 );
 -----------------------------------------------------

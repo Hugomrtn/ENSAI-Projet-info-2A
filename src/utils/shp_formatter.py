@@ -1,8 +1,8 @@
 import fiona
 from src.dao.dao_emplacement import Dao_emplacement
 from src.dao.dao_contour import Dao_contour
-from src.dao_polygone import Dao_polygone
-from src.dao_point import Dao_point
+from src.dao.dao_polygone import Dao_polygone
+from src.dao.dao_point import Dao_point
 
 
 def open_shp(path):
@@ -153,6 +153,7 @@ def get_info(path, i):
     return Population, Code_INSEE
 
 
-path = "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-09-18/REGION.shp"
+path = "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-\
+    09-18/REGION.shp"
 data, n = open(path)
 print(data[0]["geometry"])

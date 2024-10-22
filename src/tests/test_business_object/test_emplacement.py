@@ -23,5 +23,6 @@ def test_emplacement_initialization(emplacement_sample):
 
 def test_emplacement_str_method(emplacement_sample):
     result_str = str(emplacement_sample)
-    expected_str = "Paris est un/une ville qui comprend 2200000 habitants"
+    expected_str = ("Paris est un/une ville, 75000 qui" +
+                    " comprend 2200000 habitants")
     assert result_str == expected_str

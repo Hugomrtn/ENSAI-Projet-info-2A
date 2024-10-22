@@ -11,14 +11,14 @@ liste_emplacements = [
     emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234"),
     emplacement(id_emplacement="lea", niveau="0", nom="lea@mail.fr", code="0000"),
     emplacement(id_emplacement="gg", niveau="10", nom="gg@mail.fr", code="abcd"),
-]
+]#à modifier
 
 
 def test_creer_ok():
     """ "Création d'emplacement réussie"""
 
     # GIVEN
-    niveau, nom, code = "jp", "1234", 15, "z@mail.oo"
+    niveau, nom, code = "jp", "1234", 15
     Dao_emplacement().creer = MagicMock(return_value=True)
 
     # WHEN
@@ -33,7 +33,7 @@ def test_creer_echec():
     (car la méthode Dao_emplacement().creer retourne False)"""
 
     # GIVEN
-    niveau, nom, code = "jp", "1234", 15, "z@mail.oo"
+    niveau, nom, code = "jp", "1234", 15
     Dao_emplacement().creer = MagicMock(return_value=False)
 
     # WHEN
@@ -71,7 +71,7 @@ def test_trouver_par_id():
 
     # THEN
     assert resultat == emplacement_attendu
-    assert resultat.id_emplacement == "jp"  # Vérifie que l'id correspond
+    assert resultat.id_emplacement == "jp"
     assert resultat.niveau == "10"
     assert resultat.nom == "jp@mail.fr"
     assert resultat.code == "1234"

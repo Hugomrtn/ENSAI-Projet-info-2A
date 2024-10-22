@@ -1,8 +1,13 @@
 import fiona
-from src.dao.dao_emplacement import Dao_emplacement
-from src.dao.dao_contour import Dao_contour
-from src.dao.dao_polygone import Dao_polygone
-from src.dao.dao_point import Dao_point
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from dao.dao_emplacement import Dao_emplacement # NOQA
+from dao.dao_contour import Dao_contour  # NOQA
+from dao.dao_polygone import Dao_polygone # NOQA
+from dao.dao_point import Dao_point # NOQA
 
 
 def open_shp(path):

@@ -164,6 +164,7 @@ def get_info(path, i):
     return Population, Code_INSEE, Nom
 
 
-path = "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-09-18/REGION.shp"
+path = ("1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_" +
+        "GUF-ED2024-09-18/REGION.shp")
 Emplacement, Contour, Polygones, Points = data_to_list(path)
 print(Emplacement)

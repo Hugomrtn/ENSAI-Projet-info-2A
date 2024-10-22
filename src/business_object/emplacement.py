@@ -20,6 +20,6 @@ class Emplacement:
     def __str__(self):
         """Permet d'afficher les informations de l'emplacement"""
         return (
-            f"({self.nom} est un/une {self.niveau} ({self.code}) qui comprend "
-            f"{self.pop} habitants)"
+            f"{self.nom} est un/une {self.niveau}, {self.code} qui comprend "
+            f"{self.pop} habitants"
         )

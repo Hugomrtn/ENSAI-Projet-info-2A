@@ -11,7 +11,6 @@ from dao.dao_point import Dao_point
 from business_object.polygone import Polygone
 
 
-
 class Dao_polygone(metaclass=Singleton):
 
     @log
@@ -44,8 +43,8 @@ class Dao_polygone(metaclass=Singleton):
         return res["id_polygone"]
 
     def creer_association_polygone_point(self, id_polygone, id_point,
-                                           ordre):
-        """Création d'un lien entre un polygone et un point 
+                                         ordre):
+        """Création d'un lien entre un polygone et un point
             (un polygone pourra avoir plusieurs liens) dans la base de données
             Parameters
             ----------
@@ -89,13 +88,11 @@ class Dao_polygone(metaclass=Singleton):
             """
         id_polygone = Dao_polygone.creer()
 
-        k = 0
-        for point in polygone.liste_points:
-            id_point = Dao_point.creer(point) #sachant que creer le point renvoie l'id
+        for i in range(polygone.liste_points):
+            id_point = Dao_point.creer(polygone.liste_points[i])
             Dao_polygone.creer_association_polygone_point(
-                id_polygone, id_point, k
+                id_polygone, id_point, i
             )
-            k += 1
 
         return polygone.id_polygone
 
@@ -165,8 +162,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return res is not None
 
-
-#######################################
+    # #######################################
 
     @log
     def obtenir_id_polygones_composants_selon_id_contour(self, id_contour):

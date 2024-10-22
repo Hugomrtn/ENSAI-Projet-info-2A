@@ -1,5 +1,3 @@
-# from dao.dao_emplacement import Dao_emplacement
-
 
 class Emplacement:
     """Classe représentant un emplacement

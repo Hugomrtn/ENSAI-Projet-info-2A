@@ -1,11 +1,11 @@
 import logging
 
-from src.utils.singleton import Singleton
-from src.utils.log_decorator import log
+from utils.singleton import Singleton
+from utils.log_decorator import log
 
-from src.dao.db_connection import DBConnection
+from dao.db_connection import DBConnection
 
-from src.business_object.point import Point
+from business_object.point import Point
 
 
 class Dao_point(metaclass=Singleton):

@@ -1,12 +1,12 @@
 import logging
 
-from src.utils.singleton import Singleton
-from src.utils.log_decorator import log
+from utils.singleton import Singleton
+from utils.log_decorator import log
 
-from src.dao.db_connection import DBConnection
-from src.dao.dao_polygone import Dao_polygone
+from dao.db_connection import DBConnection
+from dao.dao_polygone import Dao_polygone
 
-from src.business_object.contour import Contour
+from business_object.contour import Contour
 
 
 class Dao_contour(metaclass=Singleton):

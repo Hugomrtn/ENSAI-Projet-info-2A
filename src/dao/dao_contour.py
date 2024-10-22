@@ -11,17 +11,10 @@ from business_object.contour import Contour
 
 class Dao_contour(metaclass=Singleton):
 
+    # ############################################# Créations
+
     @log
     def creer(self):
-
-        """Création d'un contour dans la base de données
-            Parameters
-            ----------
-
-            Returns
-            -------
-            """
-
         res = None
 
         try:
@@ -73,40 +66,9 @@ class Dao_contour(metaclass=Singleton):
             Dao_contour.creer_association_polygone_contour(
                 id_contour, id_polygones_enclaves, False)
 
-    def supprimer(self, id_contour):
-        """Suppression d'un contour dans la base de données
+        return id_contour
 
-        Parameters
-        ----------
-
-
-        Returns
-        -------
-            True si le contour a bien été supprimé
-        """
-
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    # Supprimer le contour
-                    cursor.execute(
-                        "DELETE FROM contour                  "
-                        " WHERE id_contour=%(id_contour)s      ",
-                        {"id_contour": id_contour},
-                    )
-                    # supprime aussi toutes les assocations entre un polygone et un contour
-                    cursor.execute(
-                        " DELETE FROM association_contour_polygones"
-                        " WHERE id_contour=%(id_contour)s      ",
-                        {"id_contour": id_contour},
-                    )
-                    res = cursor.rowcount
-        except Exception as e:
-            logging.info(e)
-            raise
-
-        return res > 0
-
+    # ############################################# Obtenir informations
 
     @log
     def obtenir_id_contour_selon_id_emplacement_annne(self, id_emplacement,
@@ -140,3 +102,40 @@ class Dao_contour(metaclass=Singleton):
         id_contour = res["id_contour"]
 
         return id_contour
+
+    # ############################################# Modifications&Suppressions
+
+    def supprimer(self, id_contour):
+        """Suppression d'un contour dans la base de données
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+            True si le contour a bien été supprimé
+        """
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    # Supprimer le contour
+                    cursor.execute(
+                        "DELETE FROM contour                  "
+                        " WHERE id_contour=%(id_contour)s      ",
+                        {"id_contour": id_contour},
+                    )
+                    # supprime aussi toutes les assocations entre un polygone
+                    # et un contour
+                    cursor.execute(
+                        " DELETE FROM association_contour_polygones"
+                        " WHERE id_contour=%(id_contour)s      ",
+                        {"id_contour": id_contour},
+                    )
+                    res = cursor.rowcount
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return res > 0

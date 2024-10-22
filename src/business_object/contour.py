@@ -1,4 +1,4 @@
-from src.business_object.polygone import Polygone
+from business_object.polygone import Polygone
 
 
 class Contour:
@@ -7,3 +7,9 @@ class Contour:
                  polygones_enclaves: list[Polygone]):
         self.polygones_composants = polygones_composants
         self.polygones_enclaves = polygones_enclaves
+
+    def __str__(self):
+        return (
+            f"(Contour comportant {self.polygones_composants} et "
+            f"excluant {self.polygones_enclaves})"
+        )

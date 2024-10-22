@@ -1,5 +1,5 @@
-from src.business_object.point import Point
-from src.business_object.segment import Segment
+from business_object.point import Point
+from business_object.segment import Segment
 
 
 class Polygone:
@@ -25,3 +25,15 @@ class Polygone:
             intersections += segment.coupe_a_droite(point)
 
         return intersections % 2 == 1
+
+######
+
+    def __str__(self):
+        return (
+            f"(Polygones comportant {self.liste_points})"
+        )
+
+    def __repr__(self):
+        return (
+            f"({self.liste_points})"
+        )

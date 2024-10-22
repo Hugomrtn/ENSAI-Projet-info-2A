@@ -1,4 +1,4 @@
-from src.business_object.point import Point
+from business_object.point import Point
 
 
 class Segment:

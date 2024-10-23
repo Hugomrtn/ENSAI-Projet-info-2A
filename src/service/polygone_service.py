@@ -14,7 +14,9 @@ class PolygoneService:
     @log
     def lister_tous(self) -> list[Polygone]:
         polygones = []
-        for id_polygone in Dao_polygone().obtenir_id_polygones_composants_selon_id_contour(None):
+        for (
+            id_polygone
+        ) in Dao_polygone().obtenir_id_polygones_composants_selon_id_contour(None):
             points = Dao_point().obtenir_points_ordonnes_selon_id_polygone(id_polygone)
             polygones.append(Polygone(points))
         return polygones
@@ -26,7 +28,12 @@ class PolygoneService:
 
     @log
     def modifier(self, polygone: Polygone) -> Polygone:
-        return polygone if Dao_polygone().supprimer(polygone.id_polygone) and Dao_polygone().creer_entierement_polygone(polygone) else None
+        return (
+            polygone
+            if Dao_polygone().supprimer(polygone.id_polygone)
+            and Dao_polygone().creer_entierement_polygone(polygone)
+            else None
+        )
 
     @log
     def supprimer(self, id_polygone: int) -> bool:

@@ -47,7 +47,9 @@ async def emplacement_par_id(id_emplacement: int):
 async def creer_emplacement(e: EmplacementModel):
     emplacement = emplacement_service.creer(e.niveau, e.nom, e.code, e.pop, e.annee)
     if not emplacement:
-        raise HTTPException(status_code=404, detail="Erreur lors de la création de l'emplacement")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la création de l'emplacement"
+        )
     return emplacement
 
 
@@ -63,7 +65,9 @@ async def modifier_emplacement(id_emplacement: int, e: EmplacementModel):
     emplacement.annee = e.annee
     emplacement = emplacement_service.modifier(emplacement)
     if not emplacement:
-        raise HTTPException(status_code=404, detail="Erreur lors de la modification de l'emplacement")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la modification de l'emplacement"
+        )
     return f"Emplacement {emplacement.nom} modifié"
 
 
@@ -74,6 +78,7 @@ async def supprimer_emplacement(id_emplacement: int):
         raise HTTPException(status_code=404, detail="Emplacement non trouvé")
     emplacement_service.supprimer(id_emplacement)
     return f"Emplacement {id_emplacement} supprimé"
+
 
 ### Contour Endpoints
 
@@ -99,11 +104,17 @@ async def contour_par_id(id_contour: int):
 
 @app.post("/contour/", tags=["Contours"])
 async def creer_contour(c: ContourModel):
-    polygones_composants = [polygone_service.trouver_par_id(pid) for pid in c.polygones_composants]
-    polygones_enclaves = [polygone_service.trouver_par_id(pid) for pid in c.polygones_enclaves]
+    polygones_composants = [
+        polygone_service.trouver_par_id(pid) for pid in c.polygones_composants
+    ]
+    polygones_enclaves = [
+        polygone_service.trouver_par_id(pid) for pid in c.polygones_enclaves
+    ]
     contour = contour_service.creer(polygones_composants, polygones_enclaves)
     if not contour:
-        raise HTTPException(status_code=404, detail="Erreur lors de la création du contour")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la création du contour"
+        )
     return contour
 
 
@@ -112,13 +123,19 @@ async def modifier_contour(id_contour: int, c: ContourModel):
     contour = contour_service.trouver_par_id(id_contour)
     if not contour:
         raise HTTPException(status_code=404, detail="Contour non trouvé")
-    polygones_composants = [polygone_service.trouver_par_id(pid) for pid in c.polygones_composants]
-    polygones_enclaves = [polygone_service.trouver_par_id(pid) for pid in c.polygones_enclaves]
+    polygones_composants = [
+        polygone_service.trouver_par_id(pid) for pid in c.polygones_composants
+    ]
+    polygones_enclaves = [
+        polygone_service.trouver_par_id(pid) for pid in c.polygones_enclaves
+    ]
     contour.polygones_composants = polygones_composants
     contour.polygones_enclaves = polygones_enclaves
     contour = contour_service.modifier(contour)
     if not contour:
-        raise HTTPException(status_code=404, detail="Erreur lors de la modification du contour")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la modification du contour"
+        )
     return f"Contour {id_contour} modifié"
 
 
@@ -129,6 +146,7 @@ async def supprimer_contour(id_contour: int):
         raise HTTPException(status_code=404, detail="Contour non trouvé")
     contour_service.supprimer(id_contour)
     return f"Contour {id_contour} supprimé"
+
 
 ### Polygone Endpoints
 
@@ -156,7 +174,9 @@ async def creer_polygone(p: PolygoneModel):
     points = [Point(x=x, y=y) for x, y in p.liste_points]
     polygone = polygone_service.creer(points)
     if not polygone:
-        raise HTTPException(status_code=404, detail="Erreur lors de la création du polygone")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la création du polygone"
+        )
     return polygone
 
 
@@ -169,7 +189,9 @@ async def modifier_polygone(id_polygone: int, p: PolygoneModel):
     polygone.liste_points = points
     polygone = polygone_service.modifier(polygone)
     if not polygone:
-        raise HTTPException(status_code=404, detail="Erreur lors de la modification du polygone")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la modification du polygone"
+        )
     return f"Polygone {id_polygone} modifié"
 
 
@@ -181,12 +203,14 @@ async def supprimer_polygone(id_polygone: int):
     polygone_service.supprimer(id_polygone)
     return f"Polygone {id_polygone} supprimé"
 
+
 ### Point Endpoints
 
 
 class PointModel(BaseModel):
     x: float
     y: float
+
 
 @app.get("/point/", tags=["Points"])
 async def lister_tous_points():
@@ -206,7 +230,9 @@ async def point_par_id(id_point: int):
 async def creer_point(p: PointModel):
     point = point_service.creer(p.x, p.y)
     if not point:
-        raise HTTPException(status_code=404, detail="Erreur lors de la création du point")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la création du point"
+        )
     return point
 
 
@@ -219,7 +245,9 @@ async def modifier_point(id_point: int, p: PointModel):
     point.y = p.y
     point = point_service.modifier(point)
     if not point:
-        raise HTTPException(status_code=404, detail="Erreur lors de la modification du point")
+        raise HTTPException(
+            status_code=404, detail="Erreur lors de la modification du point"
+        )
     return f"Point {id_point} modifié"
 
 
@@ -231,6 +259,8 @@ async def supprimer_point(id_point: int):
     point_service.supprimer(id_point)
     return f"Point {id_point} supprimé"
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=80)

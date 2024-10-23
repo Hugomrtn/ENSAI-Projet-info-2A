@@ -101,7 +101,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return id_polygone
 
-# ############################ Existence NE MARCHE PAS A PRIORI
+# ############################ Existence
 
     def existe(self, polygone: Polygone):
 
@@ -110,13 +110,42 @@ class Dao_polygone(metaclass=Singleton):
 
         liste_id_points = []
         for point in polygone.liste_points:
-            existence_point = Dao_point.existe(point)
+            existence_point = Dao_point().existe(point)
             liste_id_points.append(existence_point[1])
             if not existence_point[0]:
                 existence_polygone = False
                 break
         if not existence_polygone:
             return [False, id_polygone]
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_polygone, id_point, ordre "
+                        "FROM projet_2A.association_polygone_points "
+                        "ORDER BY id_polygone, ordre",
+                    )
+                    liste = cursor.fetchall()
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        polygones = {}
+        for ligne in liste:
+            id_polygone = ligne['id_polygone']
+            id_point = ligne['id_point']
+
+            if id_polygone not in polygones:
+                polygones[id_polygone] = []
+
+            polygones[id_polygone].append(id_point)
+
+        for id_polygone, polygon_point_ids in polygones.items():
+            if liste_id_points == polygon_point_ids:
+                return [True, id_polygone]
+
+        return [False, None]
 
     # #######################################
 

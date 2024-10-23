@@ -1,0 +1,27 @@
+# Point Hebdomadaire - Projet
+
+Date : Jeudi 23/10
+Semaine n° 7
+
+## Tâches réalisées cette semaine
+
+
+### BOUDABSA Saifeddine
+### Chirrane Zakariya
+### DELAUNE Eulalie
+### MARTIN Hugo
+
+### Sonnet Charles
+
+## Backlog
+
+### Prioritaires
+
+
+- Implémenter le service
+- Tester le code sur ce qui a déjà été fait
+
+
+### Secondaires
+
+- Implémenter les demandes via API

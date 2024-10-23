@@ -1,4 +1,3 @@
-from tabulate import tabulate
 from utils.log_decorator import log
 from business_object.point import Point
 from dao.dao_point import Dao_point

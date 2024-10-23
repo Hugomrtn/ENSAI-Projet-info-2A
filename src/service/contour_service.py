@@ -1,4 +1,3 @@
-from tabulate import tabulate
 from utils.log_decorator import log
 from business_object.contour import Contour
 from dao.dao_contour import Dao_contour

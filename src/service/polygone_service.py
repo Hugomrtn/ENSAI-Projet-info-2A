@@ -1,4 +1,3 @@
-from tabulate import tabulate
 from utils.log_decorator import log
 from business_object.polygone import Polygone
 from dao.dao_polygone import Dao_polygone

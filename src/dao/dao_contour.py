@@ -13,15 +13,18 @@ class Dao_contour(metaclass=Singleton):
 
     # ############################################# Créations
 
-    @log
+    # @log
     def creer(self):
+
+        """"""
+
         res = None
 
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.contour DEFAULT VALUES"
+                        "INSERT INTO projet_2A.contour DEFAULT VALUES "
                         "RETURNING id_contour;",
                     )
                     res = cursor.fetchone()
@@ -30,7 +33,7 @@ class Dao_contour(metaclass=Singleton):
 
         return res["id_contour"]
 
-    @log
+    # @log
     def creer_association_polygone_contour(self, id_contour, id_polygone,
                                            appartient):
 
@@ -38,9 +41,13 @@ class Dao_contour(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.association_contours_polygones(        "
-                        "id_contour, id_polygone, appartient) VALUES        "
-                        "(%(id_contour)s, %(id_polygone)s, %(appartient)s)  ",
+                        """
+                        INSERT INTO projet_2A.association_contours_polygones(
+                            id_contour, id_polygone, appartient
+                        ) VALUES (
+                            %(id_contour)s, %(id_polygone)s, %(appartient)s
+                        )
+                        """,
                         {
                             "id_contour": id_contour,
                             "id_polygone": id_polygone,
@@ -50,20 +57,20 @@ class Dao_contour(metaclass=Singleton):
         except Exception as e:
             logging.info(e)
 
-    @log
+    # @log
     def creer_entierement_contour(self, contour: Contour):
-        id_contour = Dao_contour.creer()
+        id_contour = Dao_contour().creer()
 
         for polygone in contour.polygones_composants:
             id_polygones_composants = \
-                Dao_polygone.creer_entierement_polygone(polygone)
-            Dao_contour.creer_association_polygone_contour(
+                Dao_polygone().creer_entierement_polygone(polygone)
+            Dao_contour().creer_association_polygone_contour(
                 id_contour, id_polygones_composants, True)
 
         for polygone in contour.polygones_enclaves:
             id_polygones_enclaves = \
-                Dao_polygone.creer_entierement_polygone(polygone)
-            Dao_contour.creer_association_polygone_contour(
+                Dao_polygone().creer_entierement_polygone(polygone)
+            Dao_contour().creer_association_polygone_contour(
                 id_contour, id_polygones_enclaves, False)
 
         return id_contour
@@ -86,7 +93,7 @@ class Dao_contour(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_contour                                  "
-                        "FROM projet_2A.association_emplacement_contour               "
+                        "FROM projet_2A.association_emplacement_contour     "
                         "WHERE id_emplacement = %(id_emplacement)s          "
                         "AND annee = %(annee)s;                             ",
                         {

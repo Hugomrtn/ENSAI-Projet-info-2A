@@ -12,7 +12,7 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Créations
 
-    @log
+    # @log
     def creer(self, emplacement: Emplacement) -> bool:
         """Création d'un emplacement dans la base de données
             Parameters
@@ -32,13 +32,11 @@ class Dao_emplacement(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.emplacement(id_emplacement,            "
-                        "nom_emplacement, niveau, pop, annee) VALUES        "
-                        "(%(id_emplacement)s, %(nom_emplacement)s,          "
-                        "%(niveau)s, %(code)s)                              "
-                        "RETURNING id_emplacement;                          ",
+                        "INSERT INTO projet_2A.emplacement(   "
+                        "nom_emplacement, niveau, code) VALUES               "
+                        "(%(nom_emplacement)s, %(niveau)s, %(code)s)"
+                        "RETURNING id_emplacement;                           ",
                         {
-                            "id_emplacement": emplacement.id_emplacement,
                             "nom_emplacement": emplacement.nom_emplacement,
                             "niveau": emplacement.niveau,
                             "code": emplacement.code,
@@ -50,37 +48,38 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res["id_emplacement"]
 
-    @log
+    # @log
     def creer_association_emplacement_contour(self,
                                               id_emplacement, annee: int,
-                                              id_contour, pop: int):
+                                              id_contour, nombre_habitants: int):
 
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "INSERT INTO projet_2A.association_emplacement_contour(       "
-                        "id_emplacement, annee, id_contour, pop) VALUES     "
-                        "(%(id_emplacement)s, %(annee)s, %(id_contour)s     "
-                        "%(pop)s)                                           ",
+                        "id_emplacement, annee, id_contour, nombre_habitants) VALUES     "
+                        "(%(id_emplacement)s, %(annee)s, %(id_contour)s,     "
+                        "%(nombre_habitants)s)                                           ",
                         {
                             "id_emplacement": id_emplacement,
                             "annee": annee,
                             "id_contour": id_contour,
-                            "pop": pop,
+                            "nombre_habitants": nombre_habitants,
                         },
                     )
         except Exception as e:
             logging.info(e)
 
-    @log
+    # @log
     def creer_entierement_emplacement(self, emplacement: Emplacement,
                                       id_contour):
 
-        id_emplacement = Dao_emplacement.creer(emplacement)
+        id_emplacement = Dao_emplacement().creer(emplacement)
 
-        Dao_emplacement.creer_association_emplacement_contour(
-            id_emplacement, emplacement.annee, id_contour, emplacement.pop)
+        Dao_emplacement().creer_association_emplacement_contour(
+            id_emplacement, emplacement.annee, id_contour,
+            emplacement.nombre_habitants)
 
     # ############################################# Obtenir informations
 

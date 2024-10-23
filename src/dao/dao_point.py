@@ -12,12 +12,11 @@ class Dao_point(metaclass=Singleton):
 
     # ############################################# Créations
 
-
     def creer(self, point: Point) -> bool:
 
         existe = Dao_point().existe(point)
         if existe[0]:
-            return existe[0]
+            return existe[1]
 
         res = None
 
@@ -25,7 +24,7 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.points(x, y) VALUES                    "
+                        "INSERT INTO projet_2A.points(x, y) VALUES          "
                         "(%(x)s, %(y)s)                                     "
                         "RETURNING id_point;                                ",
                         {
@@ -38,22 +37,6 @@ class Dao_point(metaclass=Singleton):
             logging.info(e)
 
         return res["id_point"]
-
-
-    def creer_liste_de_points(liste: list):
-        """Appliquer la fonction creer sur une liste de points
-            Parameters
-            ----------
-            liste : list of Point
-
-            Returns
-            -------
-            res: list (des IDs)
-            """
-        res = []
-        for i in range(len(liste)):
-            res.append(Dao_point.creer(liste[i]))
-        return res
 
     # ############################################# Existence
 

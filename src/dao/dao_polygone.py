@@ -13,7 +13,7 @@ from business_object.polygone import Polygone
 
 class Dao_polygone(metaclass=Singleton):
 
-    @log
+    #@log
     def creer(self):
 
         """Création d'un polygone dans la base de données
@@ -33,7 +33,7 @@ class Dao_polygone(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.polygone DEFAULT VALUES"
+                        "INSERT INTO projet_2A.polygone DEFAULT VALUES "
                         "RETURNING id_polygone;",
                     )
                     res = cursor.fetchone()
@@ -65,9 +65,13 @@ class Dao_polygone(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.association_polygone_points(        "
-                        "id_polygone, id_point, ordre) VALUES        "
-                        "(%(id_polygone)s, %(id_point)s, %(ordre)s)  ",
+                        """
+                        INSERT INTO projet_2A.association_polygone_points(
+                            id_polygone, id_point, ordre
+                        ) VALUES (
+                            %(id_polygone)s, %(id_point)s, %(ordre)s
+                        )
+                        """,
                         {
                             "id_polygone": id_polygone,
                             "id_point": id_point,
@@ -87,11 +91,11 @@ class Dao_polygone(metaclass=Singleton):
             id_polygone
             """
 
-        id_polygone = Dao_polygone.creer()
+        id_polygone = Dao_polygone().creer()
 
-        for i in range(polygone.liste_points):
-            id_point = Dao_point.creer(polygone.liste_points[i])
-            Dao_polygone.creer_association_polygone_point(
+        for i in range(len(polygone.liste_points)):
+            id_point = Dao_point().creer(polygone.liste_points[i])
+            Dao_polygone().creer_association_polygone_point(
                 id_polygone, id_point, i
             )
 
@@ -99,7 +103,7 @@ class Dao_polygone(metaclass=Singleton):
 
 # ############################ NE MARCHE PAS A PRIORI
 
-    @log
+    #@log
     def existe_polygone(liste_id_point: list) -> bool:
         """Vérifie si un polygone avec cette table d'association existe déjà
         Parameters
@@ -153,7 +157,7 @@ class Dao_polygone(metaclass=Singleton):
 
     # #######################################
 
-    @log
+    #@log
     def obtenir_id_polygones_composants_selon_id_contour(self, id_contour):
         """Trouve tous les polygones qui appartiennent à un contour
 
@@ -193,7 +197,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return liste_id_polygones_composants
 
-    @log
+    #@log
     def obtenir_id_polygones_enclaves_selon_id_contour(self, id_contour):
         """Trouve tous les polygones qui appartiennent à un contour
 

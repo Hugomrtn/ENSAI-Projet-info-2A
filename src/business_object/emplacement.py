@@ -7,14 +7,14 @@ class Emplacement:
 
     """
 
-    def __init__(self, niveau: str, nom: str, code: int,
-                 pop: int, annee: int) -> None:
+    def __init__(self, niveau: str, nom_emplacement: str, code: int,
+                 nombre_habitants: int, annee: int) -> None:
         """constructeur"""
 
         self.niveau = niveau
-        self.nom = nom
+        self.nom_emplacement = nom_emplacement
         self.code = code
-        self.pop = pop
+        self.nombre_habitants = nombre_habitants
         self.annee = annee
 
     def __str__(self):

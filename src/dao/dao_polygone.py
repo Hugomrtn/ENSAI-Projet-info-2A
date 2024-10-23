@@ -26,9 +26,6 @@ class Dao_polygone(metaclass=Singleton):
             id_polygone : int
                 ID du polygone cree (ID cree automatiquement)
             """
-        existe = Dao_polygone().existe(Polygone)
-        if existe[0]:
-            return existe[1]
 
         res = None
 
@@ -94,7 +91,11 @@ class Dao_polygone(metaclass=Singleton):
             id_polygone
             """
 
-        id_polygone = Dao_polygone().creer()
+        existe = Dao_polygone().existe(polygone)
+        if existe[0]:
+            id_polygone = existe[1]
+        else:
+            id_polygone = Dao_polygone().creer()
 
         for i in range(len(polygone.liste_points)):
             id_point = Dao_point().creer(polygone.liste_points[i])

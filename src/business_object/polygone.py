@@ -13,7 +13,7 @@ from business_object.segment import Segment # NOQA
 
 class Polygone:
     """Classe représentant un polygone
-    Attributs
+    Parameters
     ----------
     liste_points: list[Point]
         liste des points formant le polygone
@@ -48,8 +48,3 @@ class Polygone:
         return (
             f"({self.liste_points})"
         )
-
-
-points = [Point(0, 0), Point(0, 1), Point(1, 1), Point(1, 0)]
-Poly = Polygone(points)
-print(Poly.est_dans_polygone(Point(1, 0.5)))

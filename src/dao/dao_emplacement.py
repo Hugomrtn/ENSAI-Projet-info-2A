@@ -1,7 +1,7 @@
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log
+from utils.log_decorator import log # NOQA
 
 from dao.db_connection import DBConnection
 
@@ -130,7 +130,7 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Obtenir informations
 
-    @log
+    # @log
     def obtenir_nom(self, id_emplacement) -> str:
         """trouver le nom d'un emplacement grace à son id
 
@@ -150,7 +150,8 @@ class Dao_emplacement(metaclass=Singleton):
                     cursor.execute(
                         "SELECT nom_emplacement                             "
                         "FROM projet_2A.emplacement                         "
-                        "WHERE id_emplacement = %(id_emplacement)i;         ",
+                        "WHERE id_emplacement = %(id_emplacement)s;         ",
+                        {"id_emplacement": id_emplacement},
                     )
                     res = cursor.fetchone()
         except Exception as e:
@@ -159,7 +160,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res["nom_emplacement"]
 
-    @log
+    # @log
     def obtenir_informations(self, id_emplacement) -> str:
         """trouver un emplacement grace à son id
 
@@ -179,7 +180,8 @@ class Dao_emplacement(metaclass=Singleton):
                     cursor.execute(
                         "SELECT *                                           "
                         "  FROM projet_2A.emplacement                       "
-                        " WHERE id_emplacement = %(id_emplacement)i;        ",
+                        " WHERE id_emplacement = %(id_emplacement)s         ",
+                        {"id_emplacement": id_emplacement},
                     )
                     res = cursor.fetchall()
         except Exception as e:
@@ -188,7 +190,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res
 
-    @log
+    # @log
     def obtenir_id_emplacements_selon_niveau_annee(self, niveau, annee):
         """Trouve tous les emplacements selon l'année et le niveau
 
@@ -211,7 +213,7 @@ class Dao_emplacement(metaclass=Singleton):
                         {
                             "niveau": niveau,
                             "annee": annee,
-                        }
+                        },
                     )
                     res = cursor.fetchall()
         except Exception as e:
@@ -220,14 +222,14 @@ class Dao_emplacement(metaclass=Singleton):
 
         liste_id_emplacements = []
 
-        for i in range(res):
-            liste_id_emplacements.append(res["id_emplacement"][i])
+        for i in range(len(res)):
+            liste_id_emplacements.append(res[i]["id_emplacement"])
 
         return liste_id_emplacements
 
     # ############################################# Modifications&Suppressions
 
-    @log
+    # @log
     def modifier_emplacement(self, id_emplacement, nouveau_nom,
                              nouveau_niveau, nouveau_code) -> bool:
         """Modification d'un emplacement dans la base de données
@@ -266,7 +268,7 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res == 1
 
-    @log
+    # @log
     def supprimer_emplacement(self, id_emplacement) -> bool:
         """Suppression d'un emplacement dans la base de données
 

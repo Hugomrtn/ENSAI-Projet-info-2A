@@ -1,6 +1,6 @@
 class Point:
     """Classe représentant un point
-    Attributs
+    Parameters
     ----------
     x: float
     y: float

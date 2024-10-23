@@ -2,8 +2,9 @@ from business_object.point import Point
 
 
 class Segment:
-    """Classe représentant un segment
-    Attributs
+    """
+    Classe représentant un segment
+    Parameters
     ----------
     point1: Point
     point2: Point
@@ -13,8 +14,19 @@ class Segment:
         self.point2 = point2
 
     def coupe_a_droite(self, point: Point) -> int:
-        """Retourne 1 si le segment coupe le rayon à droite du point donné,
-        sinon 0."""
+        """
+        Détermine si le segment coupe le rayon horizontal à droite du point donné.
+        Parameters
+        ----------
+        point : Point
+            Le point à partir duquel le rayon est tiré pour vérifier l'intersection
+            avec le segment.
+
+        Returns
+        -------
+        int
+        Retourne 1 si le segment coupe le rayon à droite du point donné, sinon 0.
+        """
 
         if self.point1.x == self.point2.x:
             if point.x == self.point1.x and (

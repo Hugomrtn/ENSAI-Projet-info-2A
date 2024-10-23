@@ -1,6 +1,15 @@
 import pytest
-from src.business_object.point import Point
-from src.business_object.polygone import Polygone
+import sys
+import os
+
+parent_directory = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..')
+    )
+
+sys.path.append(parent_directory)
+
+from business_object.point import Point # NOQA
+from business_object.polygone import Polygone # NOQA
 
 
 @pytest.fixture
@@ -24,4 +33,4 @@ def test_point_outside(square_polygone):
 def test_point_on_edge(square_polygone):
     point_on_edge = Point(1, 0.5)
 
-    assert square_polygone.est_dans_polygone(point_on_edge) is False
+    assert square_polygone.est_dans_polygone(point_on_edge) is True

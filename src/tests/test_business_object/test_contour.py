@@ -1,12 +1,22 @@
 import pytest
-from src.business_object.contour import Contour
-from src.business_object.polygone import Polygone
-from src.business_object.point import Point
+import sys
+import os
+
+parent_directory = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..')
+    )
+
+sys.path.append(parent_directory)
+from src.business_object.contour import Contour # NOQA
+from src.business_object.polygone import Polygone # NOQA
+from src.business_object.point import Point # NOQA
+
 
 @pytest.fixture
 def polygone_composant():
     points = [Point(0, 0), Point(0, 1), Point(1, 1), Point(1, 0)]
     return Polygone(points)
+
 
 @pytest.fixture
 def polygone_enclave():

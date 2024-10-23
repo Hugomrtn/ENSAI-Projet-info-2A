@@ -17,16 +17,20 @@ class Segment:
         sinon 0."""
 
         if self.point1.x == self.point2.x:
-            if (
-                point.x < self.point1.x and (
-                    (min(self.point1.y, self.point2.y) < point.y <= max(
-                        self.point1.y, self.point2.y)
-                     )
-                    )
+            if point.x == self.point1.x and (
+                min(
+                    self.point1.y, self.point2.y
+                    ) > point.y > max(
+                        self.point1.y, self.point2.y
+                        )
             ):
                 return 1
-            if point.x == self.point1.x and (
-                point.y > max(self.point1.y, self.point2.y)
+            if point.x == self.point2.x and (
+                min(
+                    self.point1.y, self.point2.y
+                    ) > point.y > max(
+                        self.point1.y, self.point2.y
+                        )
             ):
                 return 1
             return 0
@@ -44,6 +48,10 @@ class Segment:
                 point.x > max(self.point1.x, self.point2.x)
             ):
                 return 1
+            if point.y == self.point2.y and (
+                point.x > max(self.point1.x, self.point2.x)
+            ):
+                return 0
             return 0
 
         intersection = 0

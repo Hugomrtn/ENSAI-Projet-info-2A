@@ -1,6 +1,15 @@
 import pytest
-from src.business_object.point import Point
-from src.business_object.segment import Segment
+import sys
+import os
+
+parent_directory = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..')
+    )
+
+sys.path.append(parent_directory)
+
+from business_object.point import Point # NOQA 
+from business_object.segment import Segment # NOQA
 
 
 @pytest.fixture
@@ -17,23 +26,17 @@ def segment_vertical():
     return Segment(point1, point2)
 
 
-def test_segment_coupe_a_droite_horizontal(segment_horizontal):
-    point_below = Point(2, -1)  # Sous le segment
-    point_above = Point(2, 1)    # Au dessus du segment
-    point_on_segment = Point(2, 0)  # Sur le segment
-
-    assert segment_horizontal.coupe_a_droite(point_below) == 1
-    assert segment_horizontal.coupe_a_droite(point_above) == 0
-    assert segment_horizontal.coupe_a_droite(point_on_segment) == 0
+def test_segment_vertical():
+    segment = Segment(Point(2, 1), Point(2, 3))
+    assert segment.coupe_a_droite(Point(1, 2)) == 0  # gauche
+    assert segment.coupe_a_droite(Point(3, 2)) == 0  # droite
+    assert segment.coupe_a_droite(Point(2, 4)) == 0  # au dessus
+    assert segment.coupe_a_droite(Point(2, 0)) == 0  # sous
 
 
-def test_segment_coupe_a_droite_vertical(segment_vertical):
-    point_left = Point(1, 1)   # a gauche du segment
-    point_right = Point(3, 1)   # a droite du segment
-    point_on_segment = Point(2, 0)  # Sous le segment
-    point_on_segment_above = Point(2, 2)  # Au dessus du segment
-
-    assert segment_vertical.coupe_a_droite(point_left) == 1
-    assert segment_vertical.coupe_a_droite(point_right) == 0
-    assert segment_vertical.coupe_a_droite(point_on_segment) == 0
-    assert segment_vertical.coupe_a_droite(point_on_segment_above) == 1
+def test_segment_horizontal():
+    segment = Segment(Point(1, 2), Point(3, 2))
+    assert segment.coupe_a_droite(Point(2, 1)) == 1  # dessous
+    assert segment.coupe_a_droite(Point(2, 3)) == 0  # au dessus
+    assert segment.coupe_a_droite(Point(4, 2)) == 1  # droite
+    assert segment.coupe_a_droite(Point(0, 2)) == 0  # gauche

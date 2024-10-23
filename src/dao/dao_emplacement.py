@@ -1,7 +1,7 @@
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log
+from utils.log_decorator import log # NOQA
 
 from dao.db_connection import DBConnection
 

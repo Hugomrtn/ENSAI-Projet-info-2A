@@ -2,6 +2,12 @@ from business_object.polygone import Polygone
 
 
 class Contour:
+     """Classe représentant un contour
+    Parameters
+    ----------
+    polygones_composants: list[Polygone]
+    polygones_enclaves: list[Polygone]
+    """
 
     def __init__(self, polygones_composants: list[Polygone],
                  polygones_enclaves: list[Polygone]):

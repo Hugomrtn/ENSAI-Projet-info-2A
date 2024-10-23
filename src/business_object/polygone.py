@@ -13,7 +13,7 @@ from business_object.segment import Segment # NOQA
 
 class Polygone:
     """Classe représentant un polygone
-    Attributs
+    Parameters
     ----------
     liste_points: list[Point]
         liste des points formant le polygone

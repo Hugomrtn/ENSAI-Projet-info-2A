@@ -1,10 +1,13 @@
 
 class Emplacement:
     """Classe représentant un emplacement
-    Attributs
+    Parameters
     ----------
-
-
+    niveau:str
+    nom_emplacement:str
+    code:int
+    nombre_habitants:int
+    annee:int
     """
 
     def __init__(self, niveau: str, nom_emplacement: str, code: int,

@@ -10,7 +10,7 @@ CREATE SCHEMA projet_2A;
 DROP TABLE IF EXISTS projet_2A.emplacement CASCADE;
 CREATE TABLE projet_2A.emplacement(
     id_emplacement SERIAL PRIMARY KEY,
-    nom TEXT,
+    nom_emplacement TEXT,
     niveau TEXT,
     code INT
 );
@@ -69,5 +69,5 @@ CREATE TABLE projet_2A.association_emplacement_contour(
     id_emplacement INT REFERENCES projet_2A.emplacement(id_emplacement),
     annee INT,
     id_contour INT REFERENCES projet_2A.contour(id_contour),
-    pop INT
+    nombre_habitants INT
 );

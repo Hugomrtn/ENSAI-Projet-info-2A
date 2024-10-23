@@ -1,8 +1,8 @@
 import os
 import pytest
 from unittest.mock import patch, MagicMock
-from business_object.point import Point
-from dao.dao_point import Dao_point
+from src.business_object.point import Point
+from src.dao.dao_point import Dao_point
 
 # Erreur d'import dans le dao.dao_point mais
 # Je comprends pas pourquoi

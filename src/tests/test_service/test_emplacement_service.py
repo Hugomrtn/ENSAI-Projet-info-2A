@@ -1,16 +1,16 @@
 from unittest.mock import MagicMock
 
-from service.emplacement_service import EmplacementService
+from src.service.emplacement_service import EmplacementService
 
-from dao.dao_emplacement import Dao_emplacement
+from src.dao.dao_emplacement import Dao_emplacement
 
-from business_object.emplacement import Emplacement
+from src.business_object.emplacement import Emplacement
 
 
 liste_emplacements = [
-    emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234"),
-    emplacement(id_emplacement="lea", niveau="0", nom="lea@mail.fr", code="0000"),
-    emplacement(id_emplacement="gg", niveau="10", nom="gg@mail.fr", code="abcd"),
+    emplacement(id_emplacement="1", niveau="Ville", nom="Rennes", code="35000"),
+    emplacement(id_emplacement="2", niveau="0", nom="", code="0000"),
+    emplacement(id_emplacement="3", niveau="10", nom="", code="1111"),
 ]#à modifier
 
 
@@ -18,7 +18,7 @@ def test_creer_ok():
     """ "Création d'emplacement réussie"""
 
     # GIVEN
-    niveau, nom, code = "jp", "1234", 15
+    niveau, nom, code = "Ville", "Rennes", "35000"
     Dao_emplacement().creer = MagicMock(return_value=True)
 
     # WHEN
@@ -33,7 +33,7 @@ def test_creer_echec():
     (car la méthode Dao_emplacement().creer retourne False)"""
 
     # GIVEN
-    niveau, nom, code = "jp", "1234", 15
+    niveau, nom, code = "Ville", "Rennes", "35000"
     Dao_emplacement().creer = MagicMock(return_value=False)
 
     # WHEN
@@ -55,15 +55,15 @@ def test_lister_tous():
     # THEN
     assert resultat == liste_emplacements
     assert len(resultat) == 3
-    assert resultat[0].id_emplacement == "jp"
+    assert resultat[0].id_emplacement == "1"
 
 
 def test_trouver_par_id():
     """Test pour vérifier la méthode trouver_par_id"""
 
     # GIVEN
-    id_emplacement = "jp"
-    emplacement_attendu = Emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234")
+    id_emplacement = "1"
+    emplacement_attendu = Emplacement(id_emplacement="1", niveau="Ville", nom="Rennes", code="35000")
     Dao_emplacement().trouver_par_id = MagicMock(return_value=emplacement_attendu)
 
     # WHEN
@@ -71,17 +71,17 @@ def test_trouver_par_id():
 
     # THEN
     assert resultat == emplacement_attendu
-    assert resultat.id_emplacement == "jp"
-    assert resultat.niveau == "10"
-    assert resultat.nom == "jp@mail.fr"
-    assert resultat.code == "1234"
+    assert resultat.id_emplacement == "1"
+    assert resultat.niveau == "Ville"
+    assert resultat.nom == "Rennes"
+    assert resultat.code == "35000"
 
 
 def test_modifier_succes():
     """Test pour vérifier que la modification réussit"""
 
     # GIVEN
-    emplacement = Emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234")
+    emplacement = Emplacement(id_emplacement="1", niveau="Ville", nom="Rennes", code="35000")
     Dao_emplacement().modifier = MagicMock(return_value=True)
 
     # WHEN
@@ -95,7 +95,7 @@ def test_modifier_echec():
     """Test pour vérifier que la modification échoue"""
 
     # GIVEN
-    emplacement = Emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234")
+    emplacement = Emplacement(id_emplacement="1", niveau="Ville", nom="Rennes", code="35000")
     Dao_emplacement().modifier = MagicMock(return_value=False)
 
     # WHEN
@@ -109,7 +109,7 @@ def test_supprimer_succes():
     """Test pour vérifier que la suppression réussit"""
 
     # GIVEN
-    emplacement = Emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234")
+    emplacement = Emplacement(id_emplacement="1", niveau="Ville", nom="Rennes", code="35000")
     Dao_emplacement().supprimer = MagicMock(return_value=True)
 
     # WHEN
@@ -123,7 +123,7 @@ def test_supprimer_echec():
     """Test pour vérifier que la suppression échoue"""
 
     # GIVEN
-    emplacement = Emplacement(id_emplacement="jp", niveau="10", nom="jp@mail.fr", code="1234")
+    emplacement = Emplacement(id_emplacement="1", niveau="Ville", nom="Rennes", code="35000")
     Dao_emplacement().supprimer = MagicMock(return_value=False)
 
     # WHEN

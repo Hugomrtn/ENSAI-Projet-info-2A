@@ -1,10 +1,10 @@
 from unittest.mock import MagicMock
 
-from service.point_service import PointService
+from src.service.point_service import PointService
 
-from dao.dao_point import Dao_point
+from src.dao.dao_point import Dao_point
 
-from business_object.point import Point
+from src.business_object.point import Point
 
 
 def test_creer_ok():

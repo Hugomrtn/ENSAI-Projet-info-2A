@@ -106,17 +106,13 @@ class Dao_polygone(metaclass=Singleton):
     def existe(self, polygone: Polygone):
 
         id_polygone = None
-        existence_polygone = True
 
         liste_id_points = []
         for point in polygone.liste_points:
             existence_point = Dao_point().existe(point)
             liste_id_points.append(existence_point[1])
             if not existence_point[0]:
-                existence_polygone = False
-                break
-        if not existence_polygone:
-            return [False, id_polygone]
+                return [False, id_polygone]
 
         try:
             with DBConnection().connection as connection:

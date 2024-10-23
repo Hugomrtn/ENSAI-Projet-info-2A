@@ -1,5 +1,14 @@
-from business_object.point import Point
-from business_object.segment import Segment
+import sys
+import os
+
+parent_directory = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')
+    )
+
+sys.path.append(parent_directory)
+
+from business_object.point import Point # NOQA
+from business_object.segment import Segment # NOQA
 
 
 class Polygone:
@@ -17,13 +26,15 @@ class Polygone:
         polygone."""
 
         intersections = 0
+        n = len(self.liste_points)
 
-        for i in range(len(self.liste_points)):
-            point1 = Point(self.liste_points[i])
-            point2 = Point(self.liste_points[(i + 1) % len(self.liste_points)])
+        for i in range(n):
+            point1 = self.liste_points[i]
+            point2 = self.liste_points[(i + 1) % n]
             segment = Segment(point1, point2)
+            print(segment)
             intersections += segment.coupe_a_droite(point)
-
+            print(intersections)
         return intersections % 2 == 1
 
 ######
@@ -37,3 +48,8 @@ class Polygone:
         return (
             f"({self.liste_points})"
         )
+
+
+points = [Point(0, 0), Point(0, 1), Point(1, 1), Point(1, 0)]
+Poly = Polygone(points)
+print(Poly.est_dans_polygone(Point(0.25, 0.5)))

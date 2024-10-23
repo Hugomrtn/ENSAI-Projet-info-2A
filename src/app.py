@@ -286,9 +286,12 @@ async def creer_segment(s: SegmentModel):
 async def segment_coupe_a_droite(s: SegmentModel, point: PointModel):
     """Vérifier si un segment coupe à droite d'un point"""
     point_obj = Point(point.x, point.y)
-    segment = segment_service.creer(Point(s.point1.x, s.point1.y), Point(s.point2.x, s.point2.y))
+    segment = segment_service.creer(
+        Point(s.point1.x, s.point1.y), Point(s.point2.x, s.point2.y)
+    )
     intersections = segment_service.coupe_a_droite(segment, point_obj)
     return {"intersections": intersections}
+
 
 if __name__ == "__main__":
     import uvicorn

@@ -5,9 +5,15 @@ from business_object.emplacement import Emplacement
 
 class EmplacementService:
     @log
-    def creer(self, niveau: str, nom: str, code: int, pop: int, annee: int) -> Emplacement:
+    def creer(
+        self, niveau: str, nom: str, code: int, pop: int, annee: int
+    ) -> Emplacement:
         emplacement = Emplacement(niveau, nom, code, pop, annee)
-        return emplacement if Dao_emplacement().creer(entierement_emplacement=emplacement) else None
+        return (
+            emplacement
+            if Dao_emplacement().creer(entierement_emplacement=emplacement)
+            else None
+        )
 
     @log
     def lister_tous(self) -> list[Emplacement]:
@@ -22,7 +28,16 @@ class EmplacementService:
 
     @log
     def modifier(self, emplacement: Emplacement) -> Emplacement:
-        return emplacement if Dao_emplacement().modifier_emplacement(emplacement.id_emplacement, emplacement.nom, emplacement.niveau, emplacement.code) else None
+        return (
+            emplacement
+            if Dao_emplacement().modifier_emplacement(
+                emplacement.id_emplacement,
+                emplacement.nom,
+                emplacement.niveau,
+                emplacement.code,
+            )
+            else None
+        )
 
     @log
     def supprimer(self, id_emplacement: int) -> bool:

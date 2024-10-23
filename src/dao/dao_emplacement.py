@@ -26,6 +26,10 @@ class Dao_emplacement(metaclass=Singleton):
                 False sinon
             """
 
+        existe = Dao_emplacement().existe(emplacement)
+        if existe[0]:
+            return existe[1]
+
         res = None
 
         try:
@@ -51,16 +55,19 @@ class Dao_emplacement(metaclass=Singleton):
     # @log
     def creer_association_emplacement_contour(self,
                                               id_emplacement, annee: int,
-                                              id_contour, nombre_habitants: int):
+                                              id_contour,
+                                              nombre_habitants: int):
 
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO projet_2A.association_emplacement_contour(       "
-                        "id_emplacement, annee, id_contour, nombre_habitants) VALUES     "
-                        "(%(id_emplacement)s, %(annee)s, %(id_contour)s,     "
-                        "%(nombre_habitants)s)                                           ",
+                        "INSERT INTO                                        "
+                        "projet_2A.association_emplacement_contour(         "
+                        "id_emplacement, annee, id_contour,                 "
+                        "nombre_habitants) VALUES                           "
+                        "(%(id_emplacement)s, %(annee)s, %(id_contour)s,    "
+                        "%(nombre_habitants)s)                              ",
                         {
                             "id_emplacement": id_emplacement,
                             "annee": annee,
@@ -80,6 +87,46 @@ class Dao_emplacement(metaclass=Singleton):
         Dao_emplacement().creer_association_emplacement_contour(
             id_emplacement, emplacement.annee, id_contour,
             emplacement.nombre_habitants)
+
+    # ############################################# Existence
+
+    def existe(self, emplacement: Emplacement):
+        """Vérifie si un point existe déjà dans la base de données
+            Parameters
+            ----------
+            point : Point
+
+            Returns
+            -------
+            existe : bool
+                True si le point existe
+                False sinon
+            """
+        existe = False
+        id_emplacement = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_emplacement FROM projet_2A.emplacement   "
+                        "WHERE nom_emplacement = %(nom_emplacement)s        "
+                        "AND niveau = %(niveau)s                            "
+                        "AND code = %(code)s;                               ",
+                        {
+                            "nom_emplacement": emplacement.nom_emplacement,
+                            "niveau": emplacement.niveau,
+                            "code": emplacement.code,
+                        },
+                    )
+                    res = cursor.fetchone()
+                    if res:
+                        id_emplacement = res["id_emplacement"]
+                        existe = True
+        except Exception as e:
+            logging.info(e)
+
+        return [existe, id_emplacement]
 
     # ############################################# Obtenir informations
 
@@ -102,7 +149,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT nom_emplacement                             "
-                        "FROM projet_2A.emplacement                                   "
+                        "FROM projet_2A.emplacement                         "
                         "WHERE id_emplacement = %(id_emplacement)i;         ",
                     )
                     res = cursor.fetchone()
@@ -131,7 +178,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT *                                           "
-                        "  FROM projet_2A.emplacement                                 "
+                        "  FROM projet_2A.emplacement                       "
                         " WHERE id_emplacement = %(id_emplacement)i;        ",
                     )
                     res = cursor.fetchall()
@@ -156,8 +203,8 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_emplacement                              "
-                        "FROM projet_2A.emplacement                                   "
-                        "JOIN projet_2A.association_emplacement_contour               "
+                        "FROM projet_2A.emplacement                         "
+                        "JOIN projet_2A.association_emplacement_contour     "
                         "USING(id_emplacement)                              "
                         "WHERE emplacement.niveau = %(niveau)s AND          "
                         "association_emplacement_contour.annee = %(annee)s; ",
@@ -201,7 +248,7 @@ class Dao_emplacement(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "UPDATE projet_2A.emplacement                                 "
+                        "UPDATE projet_2A.emplacement                       "
                         "   SET niveau      = %(niveau)s,                   "
                         "       nom         = %(nom)s,                      "
                         "       code         = %(code)s,                    "
@@ -237,7 +284,7 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Supprimer l'emplacement
                     cursor.execute(
-                        "DELETE FROM projet_2A.emplacement                            "
+                        "DELETE FROM projet_2A.emplacement                  "
                         " WHERE id_emplacement=%(id_emplacement)s           ",
                         {"id_emplacement": id_emplacement},
                     )

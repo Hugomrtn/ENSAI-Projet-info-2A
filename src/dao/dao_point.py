@@ -40,8 +40,7 @@ class Dao_point(metaclass=Singleton):
 
     # ############################################# Existence
 
-
-    def existe(self, point: Point) -> bool:
+    def existe(self, point: Point):
         """Vérifie si un point existe déjà dans la base de données
             Parameters
             ----------
@@ -60,8 +59,8 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT id_point FROM projet_2A.points WHERE x = %(x)s    "
-                        "AND y = %(y)s;                                 ",
+                        "SELECT id_point FROM projet_2A.points              "
+                        "WHERE x = %(x)s AND y = %(y)s;                     ",
                         {
                             "x": point.x,
                             "y": point.y,
@@ -92,7 +91,8 @@ class Dao_point(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT point.x, point.y                            "
-                        "FROM projet_2A.point JOIN projet_2A.association_polygone_point         "
+                        "FROM projet_2A.point                               "
+                        "JOIN projet_2A.association_polygone_point          "
                         "USING(id_point)                                    "
                         "WHERE id_polygone = %(id_polygone)s                "
                         "ORDER BY association_polygone_point.ordre          ",
@@ -127,7 +127,8 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT x, y FROM projet_2A.point WHERE id_point = %(id_point)s",
+                        "SELECT x, y FROM projet_2A.point                   "
+                        "WHERE id_point = %(id_point)s                      ",
                         {
                             "id_point": id_point,
                         },

@@ -1,15 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
+from utils.log_decorator import log
 from service.emplacement_service import EmplacementService
 from service.contour_service import ContourService
 from service.polygone_service import PolygoneService
 from service.point_service import PointService
+from service.segment_service import SegmentService
 from business_object.point import Point
 
 from utils.log_init import initialiser_logs
 
-app = FastAPI(title="Mon webservice")
+app = FastAPI(title="Notre webservice")
+
+segment_service = SegmentService()
 
 initialiser_logs("Webservice")
 
@@ -259,6 +262,33 @@ async def supprimer_point(id_point: int):
     point_service.supprimer(id_point)
     return f"Point {id_point} supprimé"
 
+
+### Segment Endpoints
+
+
+class SegmentModel(BaseModel):
+    point1: PointModel
+    point2: PointModel
+
+
+@app.post("/segment/", tags=["Segments"])
+@log
+async def creer_segment(s: SegmentModel):
+    """Créer un segment"""
+    point1 = Point(s.point1.x, s.point1.y)
+    point2 = Point(s.point2.x, s.point2.y)
+    segment = segment_service.creer(point1, point2)
+    return segment
+
+
+@app.post("/segment/coupe_a_droite", tags=["Segments"])
+@log
+async def segment_coupe_a_droite(s: SegmentModel, point: PointModel):
+    """Vérifier si un segment coupe à droite d'un point"""
+    point_obj = Point(point.x, point.y)
+    segment = segment_service.creer(Point(s.point1.x, s.point1.y), Point(s.point2.x, s.point2.y))
+    intersections = segment_service.coupe_a_droite(segment, point_obj)
+    return {"intersections": intersections}
 
 if __name__ == "__main__":
     import uvicorn

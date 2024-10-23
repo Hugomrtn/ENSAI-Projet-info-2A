@@ -26,6 +26,9 @@ class Dao_polygone(metaclass=Singleton):
             id_polygone : int
                 ID du polygone cree (ID cree automatiquement)
             """
+        existe = Dao_polygone().existe(Polygone)
+        if existe[0]:
+            return existe[1]
 
         res = None
 

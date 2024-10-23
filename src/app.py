@@ -9,7 +9,7 @@ from business_object.point import Point
 
 from utils.log_init import initialiser_logs
 
-app = FastAPI(title="Mon webservice")
+app = FastAPI(title="OusuisJe")
 
 initialiser_logs("Webservice")
 

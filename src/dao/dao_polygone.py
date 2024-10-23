@@ -3,7 +3,7 @@
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log
+from utils.log_decorator import log # noqa
 
 from dao.db_connection import DBConnection
 from dao.dao_point import Dao_point
@@ -13,7 +13,7 @@ from business_object.polygone import Polygone
 
 class Dao_polygone(metaclass=Singleton):
 
-    #@log
+    # @log
     def creer(self):
 
         """Création d'un polygone dans la base de données
@@ -101,44 +101,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return id_polygone
 
-# ############################ NE MARCHE PAS A PRIORI
-
-    #@log
-    def existe_polygone(liste_id_point: list) -> bool:
-        """Vérifie si un polygone avec cette table d'association existe déjà
-        Parameters
-        ----------
-        liste_id_point : list of int
-            Liste des ID de points associés au polygone
-
-        Returns
-        -------
-        exists : bool
-            True si le polygone existe, False sinon
-        """
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    # Requête pour vérifier l'existence de la même association
-                    cursor.execute(
-                        """
-                        SELECT id_polygone
-                        FROM projet_2A.association_polygone_points
-                        WHERE id_point = ANY(%(liste_id_point)s)
-                        GROUP BY id_polygone
-                        HAVING array_agg(ordre ORDER BY ordre) =
-                        array_agg(%(liste_id_point)s ORDER
-                        BY %(liste_id_point)s);
-                        """,
-                        {"liste_id_point": liste_id_point}
-                    )
-                    res = cursor.fetchone()
-
-        except Exception as e:
-            logging.info(e)
-            return False
-
-        return res is not None
+# ############################ Existence NE MARCHE PAS A PRIORI
 
     def existe(self, polygone: Polygone):
 
@@ -157,7 +120,7 @@ class Dao_polygone(metaclass=Singleton):
 
     # #######################################
 
-    #@log
+    # @log
     def obtenir_id_polygones_composants_selon_id_contour(self, id_contour):
         """Trouve tous les polygones qui appartiennent à un contour
 
@@ -178,7 +141,7 @@ class Dao_polygone(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_polygone                                 "
-                        "FROM projet_2A.association_contours_polygones                "
+                        "FROM projet_2A.association_contours_polygones      "
                         "WHERE id_contour = %(id_contour)s                  "
                         "AND appartient = TRUE                              ",
                         {
@@ -197,7 +160,7 @@ class Dao_polygone(metaclass=Singleton):
 
         return liste_id_polygones_composants
 
-    #@log
+    # @log
     def obtenir_id_polygones_enclaves_selon_id_contour(self, id_contour):
         """Trouve tous les polygones qui appartiennent à un contour
 
@@ -212,7 +175,7 @@ class Dao_polygone(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_polygone                                 "
-                        "FROM projet_2A.association_contours_polygones                "
+                        "FROM projet_2A.association_contours_polygones      "
                         "WHERE id_contour = %(id_contour)s                  "
                         "AND appartient = FALSE                             ",
                         {

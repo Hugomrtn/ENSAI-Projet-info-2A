@@ -4,10 +4,10 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from dao.dao_emplacement import Dao_emplacement # NOQA
-from dao.dao_contour import Dao_contour  # NOQA
-from dao.dao_polygone import Dao_polygone # NOQA
-from dao.dao_point import Dao_point # NOQA
+from business_object.emplacement import Emplacement # NOQA
+from business_object.contour import Contour  # NOQA
+from business_object.polygone import Polygone # NOQA
+from business_object.point import Point # NOQA
 
 
 def open_shp(path):
@@ -54,59 +54,57 @@ def data_to_list(path):
     """
 
     data, n = open_shp(path)
-    EmplacementDAO = Dao_emplacement()
-    ContourDAO = Dao_contour()
-    PolygoneDAO = Dao_polygone()
-    PointDAO = Dao_point()
+    emplacements = []
+    contours = []
+    polygones = []
+    points = []
+
     for i in range(n):
-        Population, Code_Insee, Nom = get_info(path, i)
-        Emplacement = [
-            Nom,
-            get_niveau(path),
-            Population,
-            get_annee(path),
-            Code_Insee
-            ]
-        emplacement_id = EmplacementDAO.creer(Emplacement)
-        Emplacement = [
-            emplacement_id,
-            Nom,
-            get_niveau(path),
-            Population,
-            get_annee(path),
-            Code_Insee
-            ]
-        contour_id = ContourDAO.creer()
-        Contour = [contour_id]
+
+        # Emplacement
+        population, code_insee, nom = get_info(path, i)
+        niveau = get_niveau(path)
+        annee = get_annee(path)
+        emplacement = Emplacement(
+            niveau=niveau,
+            nom=nom,
+            code=code_insee,
+            pop=population,
+            annee=annee
+            )
+        emplacements.append(emplacement)
+
+        # Contour
+        contour = Contour()
+        contours.append(contour)
+
+        # Polygones
         geometry = data[i]["geometry"]["coordinates"]
-        Points = []
-        Poly_Composant = []
-        Poly_Enclave = []
-        Polygones = [Poly_Composant, Poly_Enclave]
-        if reconnaissance_polygon(data, i):     # Un Polygone simple
-            id_poly = PolygoneDAO.creer()
-            Poly = [id_poly, geometry[0]]
-            Poly_Composant.append(Poly)
-            for point in geometry[0]:
-                PointDAO = Dao_point()
-                X = point[0]
-                Y = point[1]
-                Point_id = PointDAO.creer([X, Y])
-                Point = [Point_id, X, Y]
-                Points.append(Point)
-        else:       # Un Multi-Polygone
+        poly_composants = []
+        poly_enclaves = []
+
+        if reconnaissance_polygon(data, i):  # Polygone simple
+            points_for_polygon = [
+                (x:=pt[0], y:=pt[1]) for pt in geometry[0]  # NOQA
+                ]
+            polygone = Polygone(points_for_polygon)
+            poly_composants.append(polygone)
+            points.extend(points_for_polygon)
+        else:  # Multi-Polygon
             for multi_polygon in geometry:
-                for polygon in multi_polygon[0]:
-                    id_poly = PolygoneDAO.creer()
-                    Poly = [id_poly, polygon]
-                    Poly_Enclave.append(Poly)
-                    for point in multi_polygon[0]:
-                        X = point[0]
-                        Y = point[1]
-                        Point_id = PointDAO.creer([X, Y])
-                        Point = [Point_id, X, Y]
-                        Points.append(Point)
-    return Emplacement, Contour, Polygones, Points
+                points_for_multi_polygon = [
+                    Point(x=pt[0], y=pt[1]) for pt in multi_polygon[0]
+                    ]
+                polygone = Polygone(points_for_multi_polygon)
+                poly_enclaves.append(polygone)
+                points.extend(points_for_multi_polygon)
+
+        # Ajout des polygones aux contours
+        contour.polygones_composants = poly_composants
+        contour.polygones_enclaves = poly_enclaves
+        polygones.append(poly_composants + poly_enclaves)
+
+    return emplacements, contours, polygones, points
 
 
 def get_annee(path):
@@ -167,9 +165,3 @@ def get_info(path, i):
         Nom = "Pas de Nom"
 
     return Population, Code_INSEE, Nom
-
-
-path = ("1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_" +
-        "GUF-ED2024-09-18/REGION.shp")
-Emplacement, Contour, Polygones, Points = data_to_list(path)
-print(Emplacement)

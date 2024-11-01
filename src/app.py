@@ -13,11 +13,6 @@ from utils.log_init import initialiser_logs
 <<<<<<< HEAD
 app = FastAPI(title="OusuisJe")
 =======
-app = FastAPI(title="Notre webservice")
-
-segment_service = SegmentService()
->>>>>>> ca0e878686510a4b9cf7c4452d3d1019b1663cae
-
 initialiser_logs("Webservice")
 
 emplacement_service = EmplacementService()

@@ -12,7 +12,7 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Créations
 
-    # @log
+    @log
     def creer(self, emplacement: Emplacement) -> bool:
         """Création d'un emplacement dans la base de données
             Parameters

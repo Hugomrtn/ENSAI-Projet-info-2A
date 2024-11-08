@@ -15,17 +15,19 @@ class Segment:
 
     def coupe_a_droite(self, point: Point) -> int:
         """
-        Détermine si le segment coupe le rayon horizontal à droite du point donné.
+        Détermine si le segment coupe le rayon horizontal à droite du point
+        donné.
         Parameters
         ----------
         point : Point
-            Le point à partir duquel le rayon est tiré pour vérifier l'intersection
-            avec le segment.
+            Le point à partir duquel le rayon est tiré pour vérifier
+            l'intersection avec le segment.
 
         Returns
         -------
         int
-        Retourne 1 si le segment coupe le rayon à droite du point donné, sinon 0.
+        Retourne 1 si le segment coupe le rayon à droite du point donné,
+        0 sinon.
         """
 
         if self.point1.x == self.point2.x:

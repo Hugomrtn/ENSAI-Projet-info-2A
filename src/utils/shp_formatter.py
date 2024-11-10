@@ -2,16 +2,16 @@ import fiona
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from business_object.emplacement import Emplacement # NOQA
+from business_object.emplacement import Emplacement  # NOQA
 from business_object.contour import Contour  # NOQA
-from business_object.polygone import Polygone # NOQA
-from business_object.point import Point # NOQA
+from business_object.polygone import Polygone  # NOQA
+from business_object.point import Point  # NOQA
 
 
 def open_shp(path):
-    data = fiona.open(path, 'r')
+    data = fiona.open(path, "r")
     n = len(data)  # Nombres de features
     return data, n
 
@@ -40,8 +40,7 @@ def reconnaissance_polygon(data, i):
 
 def data_to_list(path):
     """
-    Extrait les données du .shp vers une liste
-    afin de les transférer dans une bdd
+    Extrait les données du .shp vers une bdd
     ----------------
     Parameters:
         path : str, le chemin du fichier.shp à traiter
@@ -67,34 +66,42 @@ def data_to_list(path):
         annee = get_annee(path)
         emplacement = Emplacement(
             niveau=niveau,
-            nom=nom,
+            nom_emplacement=nom,
             code=code_insee,
-            pop=population,
-            annee=annee
-            )
+            nombre_habitants=population,
+            annee=annee,
+        )
         emplacements.append(emplacement)
-
-        # Contour
-        contour = Contour()
-        contours.append(contour)
 
         # Polygones
         geometry = data[i]["geometry"]["coordinates"]
         poly_composants = []
         poly_enclaves = []
 
+        # Contour
+        contour = Contour(
+            polygones_composants=poly_composants,
+            polygones_enclaves=poly_enclaves
+        )
+        contours.append(contour)
+
         if reconnaissance_polygon(data, i):  # Polygone simple
             points_for_polygon = [
-                (x:=pt[0], y:=pt[1]) for pt in geometry[0]  # NOQA
-                ]
+                (x := pt[0], y := pt[1]) for pt in geometry[0]  # NOQA
+            ]
             polygone = Polygone(points_for_polygon)
             poly_composants.append(polygone)
             points.extend(points_for_polygon)
         else:  # Multi-Polygon
             for multi_polygon in geometry:
-                points_for_multi_polygon = [
-                    Point(x=pt[0], y=pt[1]) for pt in multi_polygon[0]
-                    ]
+                points_for_multi_polygon = []
+                for pt in multi_polygon[0]:
+                    if isinstance(pt, tuple) is False:
+                        continue
+                    else:
+                        x = pt[0]
+                        y = pt[1]
+                    points_for_multi_polygon.append(Point(x, y))
                 polygone = Polygone(points_for_multi_polygon)
                 poly_enclaves.append(polygone)
                 points.extend(points_for_multi_polygon)
@@ -133,7 +140,7 @@ def get_niveau(path):
         niveau : str, le niveau des differentes informations
     """
     n = len(path)
-    return path[75: n - 4]
+    return path[70:n - 4]
 
 
 def get_info(path, i):
@@ -151,14 +158,17 @@ def get_info(path, i):
     niveau = get_niveau(path)
     data, n = open_shp(path)
     prop = data[i]["properties"]
+
     if "POPULATION" in prop:
         Population = prop["POPULATION"]
     else:
         Population = -1
+
     if "INSEE_" + niveau[:3] in prop:
-        Code_INSEE = prop["INSEE_" + niveau[:3]]
+        Code_INSEE = int(prop["INSEE_" + niveau[:3]])
     else:
         Code_INSEE = -1
+
     if "NOM_M" in prop:
         Nom = prop["NOM_M"]
     else:

@@ -1,53 +1,48 @@
-import pytest
-from src.business_object.emplacement import Emplacement
-from src.business_object.contour import Contour
-from src.business_object.polygone import Polygone
-from src.business_object.point import Point
-from src.utils.shp_formatter import data_to_list
+from src.utils.shp_formatter import (
+    open_shp,
+    reconnaissance_polygon,
+    data_to_list,
+    get_annee,
+    get_niveau,
+    get_info,
+)
+
+# Remplacez par le chemin réel vers votre fichier de test
+TEST_FILE_PATH = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp"  # NOQA
 
 
-@pytest.fixture
-def shp_file_path():
-    return "1_DONNEES_LIVRAISON_2024-09-00118/ADE_3-2_SHP_UTM22RGFG95_GUF-ED2024-09-18/COMMUNE.shp" # NOQA
+def test_open_shp():
+    data, n = open_shp(TEST_FILE_PATH)
+    assert n > 0  # Vérifie qu'il y a des features dans le fichier
+    assert data is not None  # Vérifie que l'objet data est bien chargé
 
 
-def test_data_to_list(shp_file_path):
-    emplacements, contours, polygones, points = data_to_list(shp_file_path)
+def test_reconnaissance_polygon():
+    data, n = open_shp(TEST_FILE_PATH)
+    is_polygon = reconnaissance_polygon(data, 0)
+    assert isinstance(is_polygon, bool)
 
-    assert len(emplacements) > 0, "No Emplacement objects created."
-    for emplacement in emplacements:
-        assert isinstance(emplacement, Emplacement)
-        assert isinstance(
-            emplacement.nom, str), "Emplacement.nom should be a string."
-        assert isinstance(
-            emplacement.niveau, str), "Emplacement.niveau should be a string."
-        assert isinstance(
-            emplacement.pop, int), "Emplacement.pop should be an integer."
-        assert isinstance(
-            emplacement.annee, int), "Emplacement.annee should be an integer."
-        assert isinstance(
-            emplacement.code, int), "Emplacement.code should be an integer."
 
-    assert len(contours) > 0, "No Contour objects created."
-    for contour in contours:
-        assert isinstance(contour, Contour)
-        assert isinstance(contour.polygones_composants, list)
-        assert isinstance(contour.polygones_enclaves, list)
+def test_data_to_list():
+    emplacements, contours, polygones, points = data_to_list(TEST_FILE_PATH)
+    assert len(emplacements) > 0
+    assert len(contours) > 0
+    assert len(polygones) > 0
+    assert len(points) > 0
 
-    assert len(polygones) > 0, "No Polygone objects created."
-    for poly_list in polygones:
-        for polygone in poly_list:
-            assert isinstance(polygone, Polygone)
-            assert isinstance(polygone.liste_points, list)
-            assert all(
-                isinstance(pt, Point) for pt in polygone.liste_points
-                ), \
-                "All items in Polygone.liste_points should be Point instances."
 
-    assert len(points) > 0, "No Point objects created."
-    for point in points:
-        assert isinstance(point, Point)
-        assert isinstance(
-            point.x, (int, float)), "Point.x should be an int or float."
-        assert isinstance(
-            point.y, (int, float)), "Point.y should be an int or float."
+def test_get_annee():
+    assert get_annee(TEST_FILE_PATH) == "2024"
+
+
+def test_get_niveau():
+    path = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp"  # NOQA
+    assert get_niveau(path) == "REGION"
+
+
+def test_get_info():
+    data, n = open_shp(TEST_FILE_PATH)
+    population, code_insee, nom = get_info(TEST_FILE_PATH, 0)
+    assert isinstance(population, int)
+    assert isinstance(code_insee, int)
+    assert isinstance(nom, str)

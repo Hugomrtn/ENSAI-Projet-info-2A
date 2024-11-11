@@ -244,8 +244,8 @@ class Dao_contour(metaclass=Singleton):
 
     def existe2(self, contour: Contour):
 
-        id_contour = None
-        existence_contour = True
+        id_contour = None # noqa
+        existence_contour = True # noqa
 
         # existence de tous les polygones composants
         # OK
@@ -297,3 +297,26 @@ class Dao_contour(metaclass=Singleton):
                 break
 
         return existe_composants
+
+###############
+    def instancier_contour_selon_id_contour(self, id_contour):
+
+        liste_polygones_composants = []
+        liste_polygones_enclaves = []
+
+        liste_id_polygones_composants = Dao_polygone().\
+            obtenir_id_polygones_composants_selon_id_contour
+        liste_id_polygones_enclaves = Dao_polygone().\
+            obtenir_id_polygones_enclaves_selon_id_contour
+
+        for id_polygone_composant in liste_id_polygones_composants:
+            liste_polygones_composants.append(
+                Dao_polygone().instancier_polygone_selon_id_polygone(
+                    id_polygone_composant))
+
+        for id_polygone_enclave in liste_id_polygones_enclaves:
+            liste_polygones_enclaves.append(
+                Dao_polygone().instancier_polygone_selon_id_polygone(
+                    id_polygone_enclave))
+
+        return Contour(liste_polygones_composants, liste_polygones_enclaves)

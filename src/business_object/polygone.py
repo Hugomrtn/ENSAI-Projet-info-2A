@@ -21,7 +21,7 @@ class Polygone:
     def __init__(self, liste_points: list[Point]):
         self.liste_points = liste_points
 
-    def est_dans_polygone(self, point: Point):
+    def polygone_contient_point(self, point: Point):
         """Ray-casting qui permet de déterminer si un point se trouve dans un
         polygone."""
 

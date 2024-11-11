@@ -222,3 +222,8 @@ class Dao_polygone(metaclass=Singleton):
             liste_id_polygones_enclaves.append(res["id_polygone"][i])
 
         return liste_id_polygones_enclaves
+
+    def instancier_polygone_selon_id_polygone(self, id_polygone):
+        liste_points = Dao_point().\
+            obtenir_points_ordonnes_selon_id_polygone(id_polygone)
+        return Polygone(liste_points)

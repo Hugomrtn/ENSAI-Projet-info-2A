@@ -131,64 +131,76 @@ class Dao_emplacement(metaclass=Singleton):
     # ############################################# Obtenir informations
 
     # @log
-    def obtenir_nom(self, id_emplacement) -> str:
-        """trouver le nom d'un emplacement grace à son id
+    def obtenir_emplacement_selon_id_et_annee(self, id_emplacement, annee):
+        """Renvoie les informations d'un emplacement selon son ID et l'année
+        spécifiée.
 
         Parameters
         ----------
         id_emplacement : int
-            numéro id de l'emplacement que l'on souhaite trouver
+            L'identifiant de l'emplacement à rechercher.
+        annee : int
+            L'année pour laquelle les informations sont demandées.
 
         Returns
         -------
-        nom : str
-            renvoie le nom que l'on cherche
+        Emplacement
+            Une instance de la classe Emplacement avec les données de
+            l'emplacement, ou None si aucun emplacement n'est trouvé.
         """
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT nom_emplacement                             "
-                        "FROM projet_2A.emplacement                         "
-                        "WHERE id_emplacement = %(id_emplacement)s;         ",
-                        {"id_emplacement": id_emplacement},
+                        "SELECT nom_emplacement, niveau, code, annee,       "
+                        "nombre_habitants FROM projet_2A.emplacement        "
+                        "JOIN projet_2A.association_emplacement_contour     "
+                        "USING(id_emplacement)                              "
+                        "WHERE id_emplacement = %(id_emplacement)s          "
+                        "AND annee = %(annee)s;                            ",
+                        {
+                            "id_emplacement": id_emplacement,
+                            "annee": annee,
+                        },
                     )
                     res = cursor.fetchone()
+                    if res:
+                        return Emplacement(**res)
         except Exception as e:
             logging.info(e)
-            raise
-
-        return res["nom_emplacement"]
+        return None
 
     # @log
-    def obtenir_informations(self, id_emplacement) -> str:
-        """trouver un emplacement grace à son id
+    def obtenir_id_selon_code(self, code):
+        """Renvoie l'ID d'un emplacement selon son code (INSEE).
 
         Parameters
         ----------
-        id_emplacement : int
-            numéro id de l'emplacement que l'on souhaite trouver
+        code : int
+            Le code INSEE de l'emplacement.
 
         Returns
         -------
-        nom : str
-            renvoie les informations que l'on veut
+        int
+            L'identifiant de l'emplacement, ou None si aucun
+            emplacement n'est trouvé.
         """
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT *                                           "
-                        "  FROM projet_2A.emplacement                       "
-                        " WHERE id_emplacement = %(id_emplacement)s         ",
-                        {"id_emplacement": id_emplacement},
+                        "SELECT id_emplacement FROM projet_2A.emplacement   "
+                        "WHERE code = %(code)s                              ",
+                        {
+                            "code": code,
+                        },
                     )
-                    res = cursor.fetchall()
+                    res = cursor.fetchone()
+                    if res:
+                        return res["id_emplacement"]
         except Exception as e:
             logging.info(e)
-            raise
-
-        return res
+        return None
 
     # @log
     def obtenir_id_emplacements_selon_niveau_annee(self, niveau, annee):

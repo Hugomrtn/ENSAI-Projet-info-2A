@@ -1,24 +1,32 @@
-from dao import Dao_emplacement
-from business_object import Emplacement
-from business_object import Point
+from dao.dao_emplacement import Dao_emplacement
+from dao.dao_contour import Dao_contour
+from business_object.point import Point
+from business_object.contour import Contour # noqa
 
 
 class Service_utilisateur:
 
-    def fonction1_obtenir_informations_selon_code(self, code):
-        # obtenir l'id a partir du code
+    def fonction1_obtenir_informations_selon_code(self, code, annee):
         id_emplacement = Dao_emplacement().obtenir_id_selon_code(code)
-        # obtenir les informatiosn avec l'id
-        res = Dao_emplacement().obtenir_informations(id_emplacement)
-        # PENSER A BIEN METTRE LES ARGUMENTS, APRES AVOIR CODÉ LA FONCTION
-        # OBTENIR INFORMATIONS
-        emplacement = Emplacement(res)
+        emplacement = Dao_emplacement().obtenir_emplacement_selon_id_et_annee(
+            id_emplacement, annee)
         # penser à gerer les exceptions
         return emplacement if emplacement else None
 
-    def fonction2_obtenir_emplacement_selon_coordonnees(self, point):
-        # RENVOIE LE CODE
-        return True
+    def fonction2_obtenir_emplacement_selon_point_niveau_annee(self, niveau,
+                                                               annee, point):
+        # RENVOIE L'ID
+        liste_id_emplacements = Dao_emplacement().\
+            obtenir_id_emplacements_selon_niveau_annee(niveau, annee)
+        for id_emplacement in liste_id_emplacements:
+            id_contour = Dao_contour().\
+                obtenir_id_contour_selon_id_emplacement_annne(id_emplacement,
+                                                              annee)
+            contour = Dao_contour().\
+                instancier_contour_selon_id_contour(id_contour)
+            if contour.contour_contient_point(point):
+                return id_emplacement
+        return None
 
     def fonction3_obtenir_multiples_emplacements_selons_liste_coordonnees(
             self, liste_coordonnees):

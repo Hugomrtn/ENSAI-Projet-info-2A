@@ -6,7 +6,7 @@ from business_object.contour import Contour # noqa
 
 class Service_utilisateur:
 
-    def fonction1_obtenir_informations_selon_code(self, code, annee):
+    def fonction1_obtenir_informations_selon_code_et_annee(self, code, annee):
         id_emplacement = Dao_emplacement().obtenir_id_selon_code(code)
         emplacement = Dao_emplacement().obtenir_emplacement_selon_id_et_annee(
             id_emplacement, annee)

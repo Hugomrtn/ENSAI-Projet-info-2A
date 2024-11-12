@@ -305,9 +305,9 @@ class Dao_contour(metaclass=Singleton):
         liste_polygones_enclaves = []
 
         liste_id_polygones_composants = Dao_polygone().\
-            obtenir_id_polygones_composants_selon_id_contour
+            obtenir_id_polygones_composants_selon_id_contour(id_contour)
         liste_id_polygones_enclaves = Dao_polygone().\
-            obtenir_id_polygones_enclaves_selon_id_contour
+            obtenir_id_polygones_enclaves_selon_id_contour(id_contour)
 
         for id_polygone_composant in liste_id_polygones_composants:
             liste_polygones_composants.append(

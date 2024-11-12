@@ -184,8 +184,8 @@ class Dao_polygone(metaclass=Singleton):
 
         liste_id_polygones_composants = []
 
-        for i in range(res):
-            liste_id_polygones_composants.append(res["id_polygone"][i])
+        for i in range(len(res)):
+            liste_id_polygones_composants.append(res[i]["id_polygone"])
 
         return liste_id_polygones_composants
 
@@ -218,8 +218,8 @@ class Dao_polygone(metaclass=Singleton):
 
         liste_id_polygones_enclaves = []
 
-        for i in range(res):
-            liste_id_polygones_enclaves.append(res["id_polygone"][i])
+        for i in range(len(res)):
+            liste_id_polygones_enclaves.append(res[i]["id_polygone"])
 
         return liste_id_polygones_enclaves
 

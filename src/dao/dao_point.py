@@ -90,12 +90,12 @@ class Dao_point(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT point.x, point.y                            "
-                        "FROM projet_2A.point                               "
-                        "JOIN projet_2A.association_polygone_point          "
+                        "SELECT points.x, points.y                          "
+                        "FROM projet_2A.points                              "
+                        "JOIN projet_2A.association_polygone_points         "
                         "USING(id_point)                                    "
                         "WHERE id_polygone = %(id_polygone)s                "
-                        "ORDER BY association_polygone_point.ordre          ",
+                        "ORDER BY association_polygone_points.ordre         ",
                         {
                             "id_polygone": id_polygone,
                         }
@@ -106,9 +106,8 @@ class Dao_point(metaclass=Singleton):
             raise
 
         liste_points = []
-
-        for i in range(res):
-            liste_points.append(Point(res["x"][i], res["y"][i]))
+        for i in range(len(res)):
+            liste_points.append(Point(res[i]["x"], res[i]["y"]))
 
         return liste_points
 

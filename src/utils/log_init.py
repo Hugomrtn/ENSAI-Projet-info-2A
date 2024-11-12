@@ -9,7 +9,7 @@ def initialiser_logs(nom):
 
     # print current working directory
     # print(os.getcwd())
-    # os.chdir('ENSAI-2A-projet-info-template')
+    # os.chdir('ENSAI-Projet-info-2A')
 
     # Création du dossier logs à la racine si non existant
     os.makedirs("logs", exist_ok=True)

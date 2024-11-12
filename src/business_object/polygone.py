@@ -32,9 +32,7 @@ class Polygone:
             point1 = self.liste_points[i]
             point2 = self.liste_points[(i + 1) % n]
             segment = Segment(point1, point2)
-            print(segment)
             intersections += segment.coupe_a_droite(point)
-            print(intersections)
         return intersections % 2 == 1
 
 ######

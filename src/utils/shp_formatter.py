@@ -181,7 +181,3 @@ def get_info(path, i):
         Nom = "Pas de Nom"
 
     return Population, Code_INSEE, Nom
-
-
-# path = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp"
-# emplacements, contours, polygones, points = data_to_list(path)

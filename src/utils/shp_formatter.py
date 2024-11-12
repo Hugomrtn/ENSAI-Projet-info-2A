@@ -47,9 +47,10 @@ def data_to_list(path):
 
     ----------------
     Returns:
-        Liste_Poly : list, Liste des polygones
-        Liste_X : list, Liste des points X formant les polygones
-        Liste_Y : list, Liste des points Y formant les polygones
+        emplacements : liste de business object emplacement
+        contours : liste de business object contours
+        polygones : liste de business object polygones
+        points : liste de business object point
     """
 
     data, n = open_shp(path)
@@ -86,9 +87,14 @@ def data_to_list(path):
         contours.append(contour)
 
         if reconnaissance_polygon(data, i):  # Polygone simple
-            points_for_polygon = [
-                (x := pt[0], y := pt[1]) for pt in geometry[0]  # NOQA
-            ]
+            points_for_polygon = []
+            for pt in geometry[0]:
+                if isinstance(pt, tuple) is False:
+                    continue
+                else:
+                    x = pt[0]
+                    y = pt[1]
+                points_for_polygon.append(Point(x, y))
             polygone = Polygone(points_for_polygon)
             poly_composants.append(polygone)
             points.extend(points_for_polygon)
@@ -175,3 +181,7 @@ def get_info(path, i):
         Nom = "Pas de Nom"
 
     return Population, Code_INSEE, Nom
+
+
+# path = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp"
+# emplacements, contours, polygones, points = data_to_list(path)

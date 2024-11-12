@@ -21,16 +21,16 @@ def square_polygone():
 def test_point_inside(square_polygone):
     point_inside = Point(0.5, 0.5)
 
-    assert square_polygone.est_dans_polygone(point_inside) is True
+    assert square_polygone.polygone_contient_point(point_inside) is True
 
 
 def test_point_outside(square_polygone):
     point_outside = Point(1.5, 1.5)
 
-    assert square_polygone.est_dans_polygone(point_outside) is False
+    assert square_polygone.polygone_contient_point(point_outside) is False
 
 
 def test_point_on_edge(square_polygone):
     point_on_edge = Point(1, 0.5)
 
-    assert square_polygone.est_dans_polygone(point_on_edge) is True
+    assert square_polygone.polygone_contient_point(point_on_edge) is True

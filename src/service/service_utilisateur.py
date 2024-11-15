@@ -34,9 +34,17 @@ class Service_utilisateur:
         # ON DIT QUE DANS LISTE COORDONNEES IL Y A DES COUPLES
         liste_points = [Point(x, y) for (x, y) in liste_coordonnees]
 
-        liste_resultat = [
+        liste_emplacements = [
             Service_utilisateur.fonction2_obtenir_emplacement_selon_coordonnees
             (point)
             for point in liste_points
         ]
+
+        liste_resultat = []
+        for i in range(len(liste_points)):
+            liste_interieur = []
+            liste_interieur.append(liste_points[i])
+            liste_interieur.append(liste_emplacements[i])
+            liste_resultat.append(liste_interieur)
+
         return liste_resultat

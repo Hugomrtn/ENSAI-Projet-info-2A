@@ -24,5 +24,6 @@ class Emplacement:
         """Permet d'afficher les informations de l'emplacement"""
         return (
             f"{self.nom_emplacement} est un/une {self.niveau}, de code INSEE "
-            f"{self.code} qui comprend {self.nombre_habitants} habitants"
+            f"{self.code} qui comprend {self.nombre_habitants} habitants en "
+            f"{self.annee}"
         )

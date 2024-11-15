@@ -24,6 +24,8 @@ async def emplacement_selon_code_et_an(annee: int, code: int):
     logging.info("Trouver un emplacement à partir de son code et son année")
     res = service_utilisateur.\
         fonction1_obtenir_informations_selon_code_et_annee(code, annee)
+    if not res:
+        return "Emplacement non trouvé"
     return res
 
 
@@ -38,6 +40,8 @@ async def localiser_selon_point(annee: int, niveau: str, latitude, longitude):
     res = service_utilisateur.\
         fonction2_obtenir_emplacement_selon_point_niveau_annee(niveau, annee,
                                                                point)
+    if not res:
+        return "Emplacement non trouvé"
     return res
 
 # Run the FastAPI application

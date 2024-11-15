@@ -116,7 +116,7 @@ def data_to_list(path):
         contour.polygones_composants = poly_composants
         contour.polygones_enclaves = poly_enclaves
         polygones.append(poly_composants + poly_enclaves)
-
+    print("Formattage terminé")
     return emplacements, contours, polygones, points
 
 

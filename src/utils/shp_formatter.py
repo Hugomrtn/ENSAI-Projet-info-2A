@@ -8,6 +8,8 @@ from business_object.emplacement import Emplacement  # NOQA
 from business_object.contour import Contour  # NOQA
 from business_object.polygone import Polygone  # NOQA
 from business_object.point import Point  # NOQA
+from dao.dao_contour import Dao_contour
+from dao.dao_emplacement import Dao_emplacement
 
 
 def open_shp(path):
@@ -81,8 +83,7 @@ def data_to_list(path):
 
         # Contour
         contour = Contour(
-            polygones_composants=poly_composants,
-            polygones_enclaves=poly_enclaves
+            polygones_composants=poly_composants, polygones_enclaves=poly_enclaves
         )
         contours.append(contour)
 
@@ -146,7 +147,7 @@ def get_niveau(path):
         niveau : str, le niveau des differentes informations
     """
     n = len(path)
-    return path[70:n - 4]
+    return path[70 : n - 4]
 
 
 def get_info(path, i):
@@ -181,3 +182,19 @@ def get_info(path, i):
         Nom = "Pas de Nom"
 
     return Population, Code_INSEE, Nom
+
+
+path = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp"  # NOQA
+
+
+def remplissage_bdd(path):
+    """ """
+    emplacements, contours, polygones, points = data_to_list(path)
+    n = len(contours)
+    for i in range(n):
+        id_contour = Dao_contour().creer_entierement_contour(contours[i])
+        Dao_emplacement().creer_entierement_emplacement(emplacements[i], id_contour)
+    print("Transfert ok.")
+
+
+remplissage_bdd(path)

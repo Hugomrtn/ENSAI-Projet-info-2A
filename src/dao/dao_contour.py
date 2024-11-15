@@ -15,9 +15,17 @@ class Dao_contour(metaclass=Singleton):
 
     # @log
     def creer(self):
+        """
+        Création d'un nouveau contour dans la base de données
 
-        """"""
+        Parameters
+        ----------
 
+        Returns
+        -------
+        int
+            L'identifiant du contour créé si l'insertion a réussi, None en cas d'échec
+        """
         res = None
 
         try:
@@ -36,6 +44,22 @@ class Dao_contour(metaclass=Singleton):
     # @log
     def creer_association_polygone_contour(self, id_contour, id_polygone,
                                            appartient):
+        """
+        Création d'une association entre un contour et un polygone dans la base de données
+
+        Parameters
+        ----------
+        id_contour : int
+            L'identifiant du contour
+        id_polygone : int
+            L'identifiant du polygone
+        appartient : bool
+            Indique si le polygone appartient au contour (True) ou est enclavé (False)
+
+        Returns
+        -------
+        None
+        """
 
         try:
             with DBConnection().connection as connection:
@@ -59,6 +83,19 @@ class Dao_contour(metaclass=Singleton):
 
     # @log
     def creer_entierement_contour(self, contour: Contour):
+        """
+        Création complète d'un contour et de ses associations avec les polygones associés dans la base de données
+
+        Parameters
+        ----------
+        contour : Contour
+            Objet Contour contenant les polygones composants et enclavés associés
+
+        Returns
+        -------
+        int
+            L'identifiant du contour créé
+        """
         id_contour = Dao_contour().creer()
 
         for polygone in contour.polygones_composants:
@@ -80,13 +117,20 @@ class Dao_contour(metaclass=Singleton):
     @log
     def obtenir_id_contour_selon_id_emplacement_annne(self, id_emplacement,
                                                       annee):
-        """Trouve tous les contours selon l'année et l'emplacement
+        """
+        Trouve tous les contours selon l'année et l'emplacement
 
         Parameters
         ----------
+        id_emplacement : int
+            L'identifiant de l'emplacement
+        annee : int
+            L'année pour laquelle le contour est recherché
 
         Returns
-
+        -------
+        int
+            L'identifiant du contour correspondant si trouvé, lève une exception en cas d'erreur
         """
         try:
             with DBConnection().connection as connection:
@@ -114,17 +158,19 @@ class Dao_contour(metaclass=Singleton):
 
     @log
     def supprimer(self, id_contour):
-        """Suppression d'un contour dans la base de données
+        """
+        Suppression d'un contour et de ses associations avec des polygones dans la base de données
 
         Parameters
         ----------
-
+        id_contour : int
+            L'identifiant du contour à supprimer
 
         Returns
         -------
-            True si le contour a bien été supprimé
+        bool
+            True si le contour et ses associations ont bien été supprimés, False sinon
         """
-
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
@@ -151,6 +197,20 @@ class Dao_contour(metaclass=Singleton):
 # #############
 
     def existe(self, contour: Contour):
+        """
+        Vérifie l'existence d'un contour dans la base de données, en comparant les polygones composants et enclaves.
+
+        Parameters
+        ----------
+        contour : Contour
+            Le contour à vérifier, contenant des listes de polygones composants et enclaves.
+
+        Returns
+        -------
+        list
+            [True, id_contour] si le contour existe et est identifié dans la base de données,
+            [False, None] si le contour n'existe pas.
+        """
 
         id_contour = None
         existence_contour = True
@@ -243,6 +303,24 @@ class Dao_contour(metaclass=Singleton):
         return [False, None]
 
     def existe2(self, contour: Contour):
+        """
+        Vérifie si un contour existe dans la base de données en analysant les polygones composants et enclaves associés.
+
+        Cette méthode vérifie l'existence de chaque polygone composant et enclave du contour donné dans la base de données.
+        Si tous les polygones composants et enclaves sont présents dans la base de données, elle vérifie ensuite si ces polygones
+        sont associés au contour dans les enregistrements de la base de données.
+
+        Parameters
+        ----------
+        contour : Contour
+            Le contour à vérifier, contenant des listes de polygones composants et enclaves.
+
+        Returns
+        -------
+        list
+            [True, id_contour] si le contour existe avec les polygones associés dans la base de données,
+            [False, None] si le contour ou ses polygones associés n'existent pas.
+        """
 
         id_contour = None # noqa
         existence_contour = True # noqa
@@ -300,6 +378,23 @@ class Dao_contour(metaclass=Singleton):
 
 ###############
     def instancier_contour_selon_id_contour(self, id_contour):
+        """
+        Instancie un objet Contour en récupérant ses polygones composants et enclaves à partir d'un identifiant de contour.
+
+        Cette méthode utilise l'identifiant du contour pour obtenir les listes d'identifiants de polygones qui le composent
+        et qui sont enclavés en son sein. Ensuite, elle instancie chaque polygone à partir de ses identifiants et les ajoute
+        aux listes correspondantes de composants ou d'enclaves. Enfin, elle retourne une instance de Contour avec ces listes.
+
+        Parameters
+        ----------
+        id_contour : int
+            L'identifiant unique du contour dans la base de données.
+
+        Returns
+        -------
+        Contour
+            Un objet Contour contenant les polygones composants et enclaves associés à l'identifiant de contour donné.
+        """
 
         liste_polygones_composants = []
         liste_polygones_enclaves = []

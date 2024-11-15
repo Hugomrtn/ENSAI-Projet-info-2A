@@ -15,17 +15,17 @@ class Dao_polygone(metaclass=Singleton):
 
     # @log
     def creer(self):
-
-        """Création d'un polygone dans la base de données
+        """
+        Création d'un polygone dans la base de données
         Sans dire les points qui le constitue (donc juste creation de l'ID)
-            Parameters
-            ----------
+        Parameters
+        ----------
 
-            Returns
-            -------
-            id_polygone : int
-                ID du polygone cree (ID cree automatiquement)
-            """
+        Returns
+        -------
+        id_polygone : int
+            ID du polygone cree (ID cree automatiquement)
+        """
 
         res = None
 
@@ -82,14 +82,20 @@ class Dao_polygone(metaclass=Singleton):
             logging.info(e)
 
     def creer_entierement_polygone(self, polygone: Polygone):
-        """Création complete d'un polygone dans la base de données
+        """
+        Création complete d'un polygone dans la base de données
         (avec les points qui le composent)
-            Parameters
-            ----------
-            Returns
-            -------
-            id_polygone
-            """
+        Parameters
+        ----------
+        polygone : Polygone
+            L'objet `Polygone` contenant les informations sur le polygone à créer, y compris la liste des points
+            qui composent ce polygone.
+
+        Returns
+        -------
+        id_polygone : int
+            L'identifiant du polygone créé ou existant dans la base de données.
+        """
 
         existe = Dao_polygone().existe(polygone)
         if existe[0]:
@@ -108,6 +114,26 @@ class Dao_polygone(metaclass=Singleton):
 # ############################ Existence
 
     def existe(self, polygone: Polygone):
+        """
+        Vérifie l'existence d'un polygone dans la base de données en fonction de la liste de ses points.
+
+        La méthode vérifie si tous les points du polygone existent déjà dans la base de données. Si un
+        des points n'existe pas, elle retourne `False`. Si tous les points existent, elle vérifie si un
+        polygone avec la même liste de points existe dans la base de données. Si un tel polygone est trouvé,
+        elle retourne son identifiant.
+
+        Parameters
+        ----------
+        polygone : Polygone
+            L'objet `Polygone` à vérifier. Il contient une liste de points qui composent le polygone.
+
+        Returns
+        -------
+        result : list
+            Une liste où le premier élément est un booléen (`True` ou `False`) indiquant si le polygone
+            existe dans la base de données, et le deuxième élément est l'identifiant du polygone si trouvé
+            (sinon `None`)
+        """
 
         id_polygone = None
 
@@ -191,13 +217,19 @@ class Dao_polygone(metaclass=Singleton):
 
     # @log
     def obtenir_id_polygones_enclaves_selon_id_contour(self, id_contour):
-        """Trouve tous les polygones qui appartiennent à un contour
+        """
+        Trouve tous les polygones qui sont des enclaves à l'intérieur d'un contour donné.
 
         Parameters
         ----------
+        id_contour : int
+            L'identifiant du contour pour lequel les polygones enclaves doivent être récupérés.
 
         Returns
-
+        -------
+        liste_id_polygones_enclaves : list of int
+            Une liste contenant les identifiants des polygones qui sont des enclaves dans le contour
+            spécifié.
         """
         try:
             with DBConnection().connection as connection:
@@ -224,6 +256,21 @@ class Dao_polygone(metaclass=Singleton):
         return liste_id_polygones_enclaves
 
     def instancier_polygone_selon_id_polygone(self, id_polygone):
+        """
+        Crée une instance de `Polygone` à partir de l'ID d'un polygone en récupérant ses points associés
+        dans l'ordre de leur association.
+
+
+        Parameters
+        ----------
+        id_polygone : int
+            L'identifiant du polygone à instancier.
+
+        Returns
+        -------
+        Polygone
+            Un objet `Polygone` instancié à partir des points récupérés pour l'ID spécifié.
+        """
         liste_points = Dao_point().\
             obtenir_points_ordonnes_selon_id_polygone(id_polygone)
         return Polygone(liste_points)

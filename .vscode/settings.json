@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "ENSAI-Projet-info-2A"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

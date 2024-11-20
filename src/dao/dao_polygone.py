@@ -16,15 +16,14 @@ class Dao_polygone(metaclass=Singleton):
     # @log
     def creer(self):
         """
-        Création d'un polygone dans la base de données
-        Sans dire les points qui le constitue (donc juste creation de l'ID)
+        Création d'un polygone dans la base de données (seulement l'ID)
         Parameters
         ----------
 
         Returns
         -------
         id_polygone : int
-            ID du polygone cree (ID cree automatiquement)
+            ID du polygone
         """
 
         res = None
@@ -44,19 +43,16 @@ class Dao_polygone(metaclass=Singleton):
 
     def creer_association_polygone_point(self, id_polygone, id_point,
                                          ordre):
-        """Création d'un lien entre un polygone et un point
-            (un polygone pourra avoir plusieurs liens) dans la base de données
+        """Création d'un lien entre un polygone et un point dans la bdd
+
             Parameters
             ----------
             id_polygone : int
-                ID du polygone a associer
+                ID du polygone
             id_point : int
-                ID du point a associer
+                ID du point
             ordre : int
-                Numero pour savoir le rang du polygone
-                (1 signifie que c'est le polygone principal
-                2 ou plus signifie que c'est une enclave a l'interieur
-                du polygone principal)
+                Numéro qui indique l'ordre des points dans le polygone
 
             Returns
             -------
@@ -84,12 +80,11 @@ class Dao_polygone(metaclass=Singleton):
     def creer_entierement_polygone(self, polygone: Polygone):
         """
         Création complete d'un polygone dans la base de données
-        (avec les points qui le composent)
+
         Parameters
         ----------
         polygone : Polygone
-            L'objet `Polygone` contenant les informations sur le polygone à créer, y compris la liste des points
-            qui composent ce polygone.
+            Polygone à créer.
 
         Returns
         -------
@@ -115,24 +110,18 @@ class Dao_polygone(metaclass=Singleton):
 
     def existe(self, polygone: Polygone):
         """
-        Vérifie l'existence d'un polygone dans la base de données en fonction de la liste de ses points.
-
-        La méthode vérifie si tous les points du polygone existent déjà dans la base de données. Si un
-        des points n'existe pas, elle retourne `False`. Si tous les points existent, elle vérifie si un
-        polygone avec la même liste de points existe dans la base de données. Si un tel polygone est trouvé,
-        elle retourne son identifiant.
+        Vérifie l'existence d'un polygone dans la base de données
 
         Parameters
         ----------
         polygone : Polygone
-            L'objet `Polygone` à vérifier. Il contient une liste de points qui composent le polygone.
 
         Returns
         -------
-        result : list
-            Une liste où le premier élément est un booléen (`True` ou `False`) indiquant si le polygone
-            existe dans la base de données, et le deuxième élément est l'identifiant du polygone si trouvé
-            (sinon `None`)
+        list
+            Une liste où le premier élément est un booléen indiquant si
+            le polygone existe dans la base de données, et le deuxième élément
+            est l'identifiant du polygone si trouvé
         """
 
         id_polygone = None
@@ -217,19 +206,16 @@ class Dao_polygone(metaclass=Singleton):
 
     # @log
     def obtenir_id_polygones_enclaves_selon_id_contour(self, id_contour):
-        """
-        Trouve tous les polygones qui sont des enclaves à l'intérieur d'un contour donné.
+        """Trouve tous les polygones qui sont enclavés par rapport à un contour
 
         Parameters
         ----------
         id_contour : int
-            L'identifiant du contour pour lequel les polygones enclaves doivent être récupérés.
+            ID d'un contour
 
         Returns
-        -------
         liste_id_polygones_enclaves : list of int
-            Une liste contenant les identifiants des polygones qui sont des enclaves dans le contour
-            spécifié.
+            Liste des ID des polygones enclavés
         """
         try:
             with DBConnection().connection as connection:
@@ -257,19 +243,16 @@ class Dao_polygone(metaclass=Singleton):
 
     def instancier_polygone_selon_id_polygone(self, id_polygone):
         """
-        Crée une instance de `Polygone` à partir de l'ID d'un polygone en récupérant ses points associés
-        dans l'ordre de leur association.
-
+        Instancie un object Polygone depuis son id.
 
         Parameters
         ----------
         id_polygone : int
-            L'identifiant du polygone à instancier.
+            L'identifiant du polygone à instancier
 
         Returns
         -------
         Polygone
-            Un objet `Polygone` instancié à partir des points récupérés pour l'ID spécifié.
         """
         liste_points = Dao_point().\
             obtenir_points_ordonnes_selon_id_polygone(id_polygone)

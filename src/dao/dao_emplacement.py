@@ -21,9 +21,7 @@ class Dao_emplacement(metaclass=Singleton):
 
             Returns
             -------
-            created : bool
-                True si la création est un succès
-                False sinon
+            L'id de l'emplacement
             """
 
         existe = Dao_emplacement().existe(emplacement)
@@ -58,30 +56,23 @@ class Dao_emplacement(metaclass=Singleton):
                                               id_contour,
                                               nombre_habitants: int):
         """
-        Crée une association entre un emplacement et un contour dans la base de données.
-
-        Cette méthode insère une nouvelle association dans la table `association_emplacement_contour`,
-        reliant un emplacement et un contour pour une année spécifique, et enregistre le nombre d'habitants.
+        Crée une association entre un emplacement et un contour dans la base
+        de données
 
         Parameters
         ----------
         id_emplacement : int
-            L'identifiant unique de l'emplacement dans la base de données.
+            L'identifiant de l'emplacement dans la base de données
         annee : int
-            L'année de l'association.
+            L'année de l'association
         id_contour : int
-            L'identifiant unique du contour dans la base de données.
+            L'identifiant du contour dans la base de données
         nombre_habitants : int
-            Le nombre d'habitants associé à cet emplacement et ce contour pour l'année donnée.
+            Le nombre d'habitants associé à cet emplacement pour l'année donnée
 
         Returns
         -------
-        None
 
-        Raises
-        ------
-        Exception
-            En cas d'erreur lors de l'insertion, l'exception est journalisée et levée.
         """
 
         try:
@@ -108,17 +99,14 @@ class Dao_emplacement(metaclass=Singleton):
     def creer_entierement_emplacement(self, emplacement: Emplacement,
                                       id_contour):
         """
-        Crée un emplacement dans la base de données et associe ce dernier à un contour.
-
-        Cette méthode effectue deux opérations :
-        1. Elle crée un nouvel emplacement dans la base de données via la méthode `creer` de `Dao_emplacement`.
-        2. Elle crée une association entre l'emplacement nouvellement créé et un contour spécifique, en enregistrant également l'année et le nombre d'habitants de l'emplacement.
+        Crée un emplacement dans la base de données et associe ce dernier à un
+        contour
 
         Parameters
         ----------
         emplacement : Emplacement
-            L'objet Emplacement contenant les informations de l'emplacement à créer,
-            incluant l'année et le nombre d'habitants.
+            L'objet Emplacement contenant les informations de l'emplacement à
+            créer
         id_contour : int
             L'identifiant du contour auquel l'emplacement sera associé.
 
@@ -136,26 +124,18 @@ class Dao_emplacement(metaclass=Singleton):
 
     def existe(self, emplacement: Emplacement):
         """
-        Vérifie si un emplacement existe déjà dans la base de données en fonction de ses attributs.
-
-        Cette méthode recherche un emplacement dans la base de données en utilisant les critères suivants :
-        - Le nom de l'emplacement
-        - Le niveau de l'emplacement
-        - Le code de l'emplacement
-
-        Si un emplacement correspondant est trouvé, la méthode retourne un indicateur de son existence et son identifiant.
-        Sinon, elle retourne un indicateur indiquant que l'emplacement n'existe pas.
+        Vérifie si un emplacement existe déjà dans la base de données
 
         Parameters
         ----------
         emplacement : Emplacement
-            L'objet Emplacement contenant les informations à vérifier dans la base de données.
+            L'objet Emplacement à vérifier dans la base de données
 
         Returns
         -------
         List[bool, int or None]
-            - Un booléen `True` si l'emplacement existe, `False` sinon.
-            - L'identifiant de l'emplacement si trouvé, sinon `None`.
+            - Un booléen True si l'emplacement existe, False sinon.
+            - L'identifiant de l'emplacement si trouvé, sinon None.
         """
         existe = False
         id_emplacement = None
@@ -226,13 +206,15 @@ class Dao_emplacement(metaclass=Singleton):
         return None
 
     # @log
-    def obtenir_id_selon_code(self, code):
+    def obtenir_id_selon_code_et_niveau(self, code, niveau):
         """Renvoie l'ID d'un emplacement selon son code (INSEE).
 
         Parameters
         ----------
         code : int
             Le code INSEE de l'emplacement.
+        niveau : str
+            Le niveau de l'emplacement.
 
         Returns
         -------
@@ -245,9 +227,10 @@ class Dao_emplacement(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_emplacement FROM projet_2A.emplacement   "
-                        "WHERE code = %(code)s                              ",
+                        "WHERE code = %(code)s AND niveau = %(niveau)s      ",
                         {
                             "code": code,
+                            "niveau": niveau,
                         },
                     )
                     res = cursor.fetchone()
@@ -265,7 +248,8 @@ class Dao_emplacement(metaclass=Singleton):
         Parameters
         ----------
         niveau : str
-            Le niveau de l'emplacement à rechercher (par exemple, "commune", "département", etc.).
+            Le niveau de l'emplacement à rechercher (par exemple, "commune",
+            "département", etc.).
 
         annee : int
             L'année associée aux emplacements à rechercher.
@@ -273,7 +257,8 @@ class Dao_emplacement(metaclass=Singleton):
         Returns
         -------
         List[int]
-            Une liste contenant les identifiants des emplacements correspondant aux critères.
+            Une liste contenant les identifiants des emplacements
+            correspondant aux critères.
         """
         try:
             with DBConnection().connection as connection:
@@ -310,9 +295,6 @@ class Dao_emplacement(metaclass=Singleton):
         """
         Modifie un emplacement dans la base de données.
 
-        Cette méthode permet de mettre à jour les informations d'un emplacement spécifié, en fonction
-        de son identifiant. Les attributs modifiables sont le nom, le niveau et le code de l'emplacement.
-
         Parameters
         ----------
         id_emplacement : int
@@ -322,7 +304,8 @@ class Dao_emplacement(metaclass=Singleton):
             Le nouveau nom de l'emplacement.
 
         nouveau_niveau : str
-            Le nouveau niveau de l'emplacement (par exemple, "commune", "département").
+            Le nouveau niveau de l'emplacement (par exemple, "commune",
+            "département").
 
         nouveau_code : str
             Le nouveau code associé à l'emplacement.
@@ -330,8 +313,8 @@ class Dao_emplacement(metaclass=Singleton):
         Returns
         -------
         bool
-            True si la modification est un succès (exactement une ligne mise à jour),
-            False sinon (aucune ligne n'a été mise à jour ou une erreur est survenue).
+            True si la modification est un succès,
+            False sinon
         """
         res = None
 
@@ -361,8 +344,6 @@ class Dao_emplacement(metaclass=Singleton):
     def supprimer_emplacement(self, id_emplacement) -> bool:
         """
         Supprime un emplacement dans la base de données.
-
-        Cette méthode permet de supprimer un emplacement existant en fonction de son identifiant.
 
         Parameters
         ----------

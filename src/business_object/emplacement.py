@@ -23,7 +23,14 @@ class Emplacement:
     def __str__(self):
         """Permet d'afficher les informations de l'emplacement"""
         return (
-            f"{self.nom_emplacement} est un/une {self.niveau}, de code INSEE "
+            f"{self.nom_emplacement}, {self.niveau} de code INSEE "
+            f"{self.code} qui comprend {self.nombre_habitants} habitants en "
+            f"{self.annee}"
+        )
+
+    def __repr__(self):
+        return (
+            f"{self.nom_emplacement}, {self.niveau} de code INSEE "
             f"{self.code} qui comprend {self.nombre_habitants} habitants en "
             f"{self.annee}"
         )

@@ -19,21 +19,9 @@ class Point:
     def __repr__(self):
         return f"({self.x}, {self.y})"
 
-    def lire_fichier(self, fichier):
+    def lire_fichier(self, contenu_fichier):
         liste_points = []
-        with open(fichier, mode="r") as file:
-            csvFile = csv.reader(file)
-            for lignes in csvFile:
-                liste_points.append(Point(float(lignes[0]), float(lignes[1])))
+        csv_reader = csv.reader(contenu_fichier)
+        for lignes in csv_reader:
+            liste_points.append(Point(float(lignes[0]), float(lignes[1])))
         return liste_points
-
-    def editer_fichier(self, liste_resultats):
-        "liste_resultat: chaque élément sous la forme [x, y, ]"
-        fichier = "résultat.csv"
-        with open(fichier, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-
-            for resultat in liste_resultats:
-                writer.writerow([resultat])
-
-        return fichier

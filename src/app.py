@@ -1,7 +1,8 @@
 import logging
 
-from fastapi import FastAPI, File, UploadFile, HTTPException # noqa
-from fastapi.responses import FileResponse # noqa
+from fastapi import FastAPI, UploadFile, HTTPException
+from fastapi.responses import StreamingResponse
+from io import StringIO
 
 from utils.log_init import initialiser_logs # noqa
 
@@ -47,18 +48,40 @@ async def localiser_selon_point(annee: int, niveau: str, latitude, longitude):
     return res
 
 
-@app.post("ousuije/upload/")
-async def localiser_selon_liste_points(niveau, annee, fichier: UploadFile =
-                                       File(...)):
-    liste_points = Point().lire_fichier(fichier)
+@app.post("/ousuisje/localiser-liste-de-points/", tags=["Localiser"])
+async def localiser_selon_liste_points(file: UploadFile, niveau, annee):
 
-    liste_resultat = Service_utilisateur().\
-        fonction3_obtenir_multiples_emplacements_selons_liste_coordonnees(
-            liste_points, niveau, annee)
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(status_code=400,
+                            detail="Only CSV files are supported.")
 
-    fichier_resultat = Point().editer_fichier(liste_resultat)
-    return fichier_resultat
+    try:
+        content = await file.read()
+        csv_content = StringIO(content.decode("utf-8"))
 
+        liste_points = Point(0, 0).lire_fichier(csv_content)
+        liste_resultats = Service_utilisateur().\
+            fonction3_obtenir_multiples_emplacements_selons_liste_coordonnees(
+                liste_points, niveau, annee)
+
+        output = StringIO()
+        for resultat in liste_resultats:
+            output.write(resultat + "\n")
+        output.seek(0)
+
+        response = StreamingResponse(
+            output,
+            media_type="text/plain",
+            headers={
+                "Content-Disposition": f"attachment; filename=résultat_"
+                f"{file.filename.replace('.csv', '.txt')}"}
+        )
+
+        return response
+
+    except Exception as e:
+        raise HTTPException(status_code=500,
+                            detail=f"Error processing file: {e}")
 
 # Run the FastAPI application
 if __name__ == "__main__":

@@ -3,11 +3,16 @@ from business_object.point import Point
 
 
 class Contour:
-    """Classe représentant un contour
-    Parameters
+    """
+    Classe représentant un contour
+
     ----------
-    polygones_composants: list[Polygone]
-    polygones_enclaves: list[Polygone]
+
+    Parameters
+
+        polygones_composants: list[Polygone]
+        polygones_enclaves: list[Polygone]
+
     """
 
     def __init__(
@@ -18,6 +23,23 @@ class Contour:
         self.polygones_enclaves = polygones_enclaves
 
     def contour_contient_point(self, point: Point):
+        """
+        Vérifie si un contour contient un point donné.
+
+        ------------
+
+        Parameters :
+            point : Point
+                Un point donné
+
+        ------------
+
+        Returns :
+            bool_composant : bool
+                Un booléen permettant de savoir si
+                le contour contient le point si TRUE
+
+        """
         bool_composant = False
         bool_enclave = False
         for polygone in self.polygones_composants:

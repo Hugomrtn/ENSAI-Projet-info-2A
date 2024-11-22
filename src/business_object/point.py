@@ -2,11 +2,16 @@ import csv
 
 
 class Point:
-    """Classe représentant un point
-    Parameters
+    """
+    Classe représentant un point
+
     ----------
-    x: float
-    y: float
+
+    Parameters :
+
+        x: float
+        y: float
+
     """
 
     def __init__(self, x: float, y: float) -> None:
@@ -20,6 +25,17 @@ class Point:
         return f"({self.x}, {self.y})"
 
     def lire_fichier(self, contenu_fichier):
+        """
+        Permet de lire un fichier et de créer les nouveaux points de
+        ce fichier.
+
+        ------------
+        Parameters :
+            contenu_ficher : csv
+                fichier donné par un utilisateur pour
+                rajouter du contenu dans la BDD
+
+        """
         liste_points = []
         csv_reader = csv.reader(contenu_fichier)
         for lignes in csv_reader:

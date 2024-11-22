@@ -4,10 +4,13 @@ from business_object.point import Point
 class Segment:
     """
     Classe représentant un segment
-    Parameters
+
     ----------
-    point1: Point
-    point2: Point
+
+    Parameters :
+        point1: Point
+        point2: Point
+
     """
     def __init__(self, point1: Point, point2: Point) -> None:
         self.point1 = point1
@@ -17,17 +20,20 @@ class Segment:
         """
         Détermine si le segment coupe le rayon horizontal à droite du point
         donné.
-        Parameters
-        ----------
-        point : Point
-            Le point à partir duquel le rayon est tiré pour vérifier
-            l'intersection avec le segment.
 
-        Returns
+        ----------
+
+        Parameters:
+            point : Point
+                Le point à partir duquel le rayon est tiré pour vérifier
+                l'intersection avec le segment.
+
         -------
-        int
-        Retourne 1 si le segment coupe le rayon à droite du point donné,
-        0 sinon.
+
+        Returns:
+            int :
+                Retourne 1 si le segment coupe le rayon à droite du
+                point donné, 0 sinon.
         """
 
         if self.point1.x == self.point2.x:

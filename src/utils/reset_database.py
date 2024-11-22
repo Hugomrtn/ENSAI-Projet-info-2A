@@ -11,11 +11,17 @@ from dao.db_connection import DBConnection # noqa
 
 class ResetDatabase(metaclass=Singleton):
     """
+
     Reinitialisation de la base de données
+
     """
 
     def lancer(self):
-        """Lancement de la réinitialisation des données"""
+        """
+
+        Lancement de la réinitialisation des données
+
+        """
 
         dotenv.load_dotenv()
 

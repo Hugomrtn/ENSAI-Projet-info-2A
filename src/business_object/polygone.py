@@ -12,18 +12,37 @@ from business_object.segment import Segment # NOQA
 
 
 class Polygone:
-    """Classe représentant un polygone
-    Parameters
+    """
+    Classe représentant un polygone
+
     ----------
-    liste_points: list[Point]
-        liste des points formant le polygone
+
+    Parameters :
+
+        liste_points: list[Point]
+            liste des points formant le polygone
+
     """
     def __init__(self, liste_points: list[Point]):
         self.liste_points = liste_points
 
     def polygone_contient_point(self, point: Point):
-        """Ray-casting qui permet de déterminer si un point se trouve dans un
-        polygone."""
+        """
+        Ray-casting qui permet de déterminer si un point se trouve dans un
+        polygone.
+
+        -------
+
+        Parameters :
+            point : Point
+                le point dont on recherche l'appartenance.
+
+        -------
+
+        Returns :
+            Un booléen afin de savoir si oui ou non
+            le polygone contient le point.
+        """
 
         intersections = 0
         n = len(self.liste_points)

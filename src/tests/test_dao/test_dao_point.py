@@ -1,8 +1,14 @@
+import sys
 import os
 import pytest
+
 from unittest.mock import patch, MagicMock
-from business_object.point import Point
-from dao.dao_point import Dao_point
+
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '../..')))
+
+from business_object.point import Point # noqa
+from dao.dao_point import Dao_point # noqa
 
 # Erreur d'import dans le dao.dao_point mais
 # Je comprends pas pourquoi

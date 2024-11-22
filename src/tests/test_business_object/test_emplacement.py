@@ -1,5 +1,11 @@
 import pytest
-from src.business_object.emplacement import Emplacement
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '../..')))
+
+from business_object.emplacement import Emplacement # noqa
 
 
 @pytest.fixture
@@ -23,6 +29,6 @@ def test_emplacement_initialization(emplacement_sample):
 
 def test_emplacement_str_method(emplacement_sample):
     result_str = str(emplacement_sample)
-    expected_str = ("Paris est un/une ville, de code INSEE 75000 qui" +
-                    " comprend 2200000 habitants")
+    expected_str = ("Paris, ville de code INSEE 75000 qui" +
+                    " comprend 2200000 habitants en 2024")
     assert result_str == expected_str

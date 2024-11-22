@@ -1,4 +1,10 @@
-from src.utils.shp_formatter import (
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '../..')))
+
+from utils.shp_formatter import (
     open_shp,
     reconnaissance_polygon,
     data_to_list,
@@ -7,8 +13,7 @@ from src.utils.shp_formatter import (
     get_info,
 )
 
-
-TEST_FILE_PATH = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp"  # NOQA
+TEST_FILE_PATH = "1_DONNEES_LIVRAISON_2024-10-00106/ADE_3-2_SHP_WGS84G_FRA-ED2024-10-16/REGION.shp"  # NOQA
 
 
 def test_open_shp():

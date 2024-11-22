@@ -1,14 +1,11 @@
-import pytest
 import sys
 import os
+import pytest
 
-parent_directory = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '..', '..')
-    )
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '../..')))
 
-sys.path.append(parent_directory)
-
-from business_object.point import Point # NOQA 
+from business_object.point import Point # NOQA
 from business_object.segment import Segment # NOQA
 
 

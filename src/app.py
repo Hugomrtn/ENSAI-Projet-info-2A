@@ -4,8 +4,6 @@ from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.responses import StreamingResponse
 from io import StringIO
 
-from utils.log_init import initialiser_logs # noqa
-
 from service.service_utilisateur import Service_utilisateur
 
 from business_object.point import Point
@@ -49,7 +47,7 @@ async def localiser_selon_point(annee: int, niveau: str, latitude, longitude):
 
 
 @app.post("/ousuisje/localiser-liste-de-points/", tags=["Localiser"])
-async def localiser_selon_liste_points(file: UploadFile, niveau, annee):
+async def localiser_selon_liste_points(file: UploadFile, annee, niveau):
 
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400,

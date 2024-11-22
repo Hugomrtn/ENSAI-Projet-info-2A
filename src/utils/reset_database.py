@@ -1,14 +1,10 @@
 import sys
 import os
+import logging
+import dotenv
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import logging # noqa
-import dotenv # noqa
-
-from unittest import mock # noqa
-
-from utils.log_decorator import log # noqa
 from utils.singleton import Singleton # noqa
 from dao.db_connection import DBConnection # noqa
 
@@ -18,7 +14,6 @@ class ResetDatabase(metaclass=Singleton):
     Reinitialisation de la base de données
     """
 
-    @log
     def lancer(self):
         """Lancement de la réinitialisation des données"""
 

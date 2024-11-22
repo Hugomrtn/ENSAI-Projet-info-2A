@@ -1,9 +1,6 @@
-# associe les points avec un ordre pour refaire un polygone
-
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log # noqa
 
 from dao.db_connection import DBConnection
 from dao.dao_point import Dao_point
@@ -13,7 +10,6 @@ from business_object.polygone import Polygone
 
 class Dao_polygone(metaclass=Singleton):
 
-    # @log
     def creer(self):
         """
         Création d'un polygone dans la base de données (seulement l'ID)
@@ -164,7 +160,6 @@ class Dao_polygone(metaclass=Singleton):
 
     # #######################################
 
-    # @log
     def obtenir_id_polygones_composants_selon_id_contour(self, id_contour):
         """Trouve tous les polygones qui appartiennent à un contour
 
@@ -204,7 +199,6 @@ class Dao_polygone(metaclass=Singleton):
 
         return liste_id_polygones_composants
 
-    # @log
     def obtenir_id_polygones_enclaves_selon_id_contour(self, id_contour):
         """Trouve tous les polygones qui sont enclavés par rapport à un contour
 

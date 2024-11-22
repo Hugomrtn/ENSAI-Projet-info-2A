@@ -1,7 +1,6 @@
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
 from dao.dao_polygone import Dao_polygone
@@ -13,7 +12,6 @@ class Dao_contour(metaclass=Singleton):
 
     # ############################################# Créations
 
-    # @log
     def creer(self):
         """
         Création d'un nouveau contour dans la base de données
@@ -84,7 +82,6 @@ class Dao_contour(metaclass=Singleton):
         except Exception as e:
             logging.info(e)
 
-    # @log
     def creer_entierement_contour(self, contour: Contour):
         """
         Création complète d'un contour dans la base de données
@@ -117,7 +114,6 @@ class Dao_contour(metaclass=Singleton):
 
     # ############################################# Obtenir informations
 
-    @log
     def obtenir_id_contour_selon_id_emplacement_annne(self, id_emplacement,
                                                       annee):
         """
@@ -160,7 +156,6 @@ class Dao_contour(metaclass=Singleton):
 
     # ############################################# Modifications&Suppressions
 
-    @log
     def supprimer(self, id_contour):
         """
         Suppression d'un contour et de ses associations avec des polygones
@@ -379,6 +374,7 @@ class Dao_contour(metaclass=Singleton):
         return existe_composants
 
 ###############
+
     def instancier_contour_selon_id_contour(self, id_contour):
         """
         Instancie un objet Contour

@@ -1,7 +1,6 @@
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
 
@@ -93,7 +92,6 @@ class Dao_point(metaclass=Singleton):
 
     # ############################################# Obtenir informations
 
-    @log
     def obtenir_points_ordonnes_selon_id_polygone(self, id_polygone):
         """
         Récupère tous les points ordonnés associés à un polygone
@@ -133,7 +131,6 @@ class Dao_point(metaclass=Singleton):
 
         return liste_points
 
-    @log
     def obtenir_id_selon_point(self, point: Point):
         """
         Récupère l'ID du point si celui-ci existe déjà dans la base de données.
@@ -155,7 +152,6 @@ class Dao_point(metaclass=Singleton):
         if informations_existence[0]:
             return informations_existence[1]
 
-    @log
     def obtenir_point_selon_id(self, id_point):
         """
         Récupère les coordonnées (x, y) d'un point en utilisant son identifiant

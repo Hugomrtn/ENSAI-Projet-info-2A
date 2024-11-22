@@ -1,7 +1,6 @@
 import logging
 
 from utils.singleton import Singleton
-from utils.log_decorator import log # NOQA
 
 from dao.db_connection import DBConnection
 
@@ -12,7 +11,6 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Créations
 
-    @log
     def creer(self, emplacement: Emplacement) -> bool:
         """Création d'un emplacement dans la base de données
             Parameters
@@ -50,7 +48,6 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res["id_emplacement"]
 
-    # @log
     def creer_association_emplacement_contour(self,
                                               id_emplacement, annee: int,
                                               id_contour,
@@ -95,7 +92,6 @@ class Dao_emplacement(metaclass=Singleton):
         except Exception as e:
             logging.info(e)
 
-    # @log
     def creer_entierement_emplacement(self, emplacement: Emplacement,
                                       id_contour):
         """
@@ -165,7 +161,6 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Obtenir informations
 
-    # @log
     def obtenir_emplacement_selon_id_et_annee(self, id_emplacement, annee):
         """Renvoie les informations d'un emplacement selon son ID et l'année
         spécifiée.
@@ -205,7 +200,6 @@ class Dao_emplacement(metaclass=Singleton):
             logging.info(e)
         return None
 
-    # @log
     def obtenir_id_selon_code_et_niveau(self, code, niveau):
         """Renvoie l'ID d'un emplacement selon son code (INSEE).
 
@@ -240,7 +234,6 @@ class Dao_emplacement(metaclass=Singleton):
             logging.info(e)
         return None
 
-    # @log
     def obtenir_id_emplacements_selon_niveau_annee(self, niveau, annee):
         """
         Trouve tous les emplacements selon l'année et le niveau
@@ -289,7 +282,6 @@ class Dao_emplacement(metaclass=Singleton):
 
     # ############################################# Modifications&Suppressions
 
-    # @log
     def modifier_emplacement(self, id_emplacement, nouveau_nom,
                              nouveau_niveau, nouveau_code) -> bool:
         """
@@ -340,7 +332,6 @@ class Dao_emplacement(metaclass=Singleton):
 
         return res == 1
 
-    # @log
     def supprimer_emplacement(self, id_emplacement) -> bool:
         """
         Supprime un emplacement dans la base de données.

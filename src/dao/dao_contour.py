@@ -94,7 +94,7 @@ class Dao_contour(metaclass=Singleton):
         Returns
         -------
         int
-            L'identifiant du contour crée
+            L'identifiant du contour créé
         """
         id_contour = Dao_contour().creer()
 

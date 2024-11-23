@@ -10,9 +10,6 @@ from business_object.point import Point
 
 app = FastAPI(title="Où suis-je?")
 
-
-# initialiser_logs("Webservice")
-
 service_utilisateur = Service_utilisateur()
 
 
@@ -84,7 +81,6 @@ async def localiser_selon_liste_points(file: UploadFile, annee, niveau):
         raise HTTPException(status_code=500,
                             detail=f"Error processing file: {e}")
 
-# Run the FastAPI application
 if __name__ == "__main__":
     import uvicorn
 

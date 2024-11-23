@@ -33,7 +33,7 @@ class Service_utilisateur:
             code, niveau)
         emplacement = Dao_emplacement().obtenir_emplacement_selon_id_et_annee(
             id_emplacement, annee)
-        # penser à gerer les exceptions
+
         return emplacement if emplacement else None
 
     def fonction2_obtenir_emplacement_selon_point_niveau_annee(self, niveau,

@@ -6,9 +6,9 @@ Projet réalisé dans le cadre du projet informatique de 2A à l'ENSAI.
 
 Se présentant sous la forme d'une API, il permet d'obtenir des informations sur
 des villes, départements, régions de France à partir de leur code INSEE.\
-Il est également possible de trouver le nom d'un emplacement auquel une coordonnée
-GPS s'y trouve.\
-Enfin, à partir d'une liste de points GPS, l'API est en mesure d'envoyer un fichier
+Il est également possible de trouver le nom de l'emplacement dans lequel se trouve une coordonnée
+GPS.\
+Enfin, à partir d'un fichier contenant une liste de points GPS, l'API est en mesure d'envoyer un fichier
 texte contenant des informations sur leur emplacement.
 
 ## Table des matières

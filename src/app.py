@@ -30,14 +30,14 @@ async def emplacement_selon_code_et_an(annee: int, niveau: str, code: int):
     return res
 
 
-@app.get("/ousuisje/localiser-point/{annee}/{niveau}/{latitude}/{longitude}",
+@app.get("/ousuisje/localiser-point/{annee}/{niveau}/{longitude}/{latitude}",
          tags=["Localiser"])
-async def localiser_selon_point(annee: int, niveau: str, latitude, longitude):
-    """Trouver un emplacement à partir de son code et son année
+async def localiser_selon_point(annee: int, niveau: str, longitude, latitude):
+    """Trouver un emplacement à partir de l'année, du niveau et des coordonnées
     GET http://localhost/ousuisje/localiser-point/2024/Ville/2.5/2.5
     """
     logging.info("Trouver un emplacement à partir de son code et son année")
-    point = Point(float(latitude), float(longitude))
+    point = Point(float(longitude), float(latitude))
     res = service_utilisateur.\
         fonction2_obtenir_emplacement_selon_point_niveau_annee(niveau, annee,
                                                                point)
@@ -48,7 +48,10 @@ async def localiser_selon_point(annee: int, niveau: str, latitude, longitude):
 
 @app.post("/ousuisje/localiser-liste-de-points/", tags=["Localiser"])
 async def localiser_selon_liste_points(file: UploadFile, annee, niveau):
-
+    """Trouver des emplacement à partir de l'année, du niveau et des
+    coordonnées d'une liste de points à partir d'un fichier CSV
+    POST /ousuisje/localiser-liste-de-points/
+    """
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400,
                             detail="Only CSV files are supported.")

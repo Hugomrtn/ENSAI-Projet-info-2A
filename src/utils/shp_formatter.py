@@ -4,10 +4,13 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from business_object.emplacement import Emplacement  # NOQA
-from business_object.contour import Contour  # NOQA
-from business_object.polygone import Polygone  # NOQA
-from business_object.point import Point  # NOQA
+from business_object.emplacement import Emplacement  # noqa
+from business_object.contour import Contour  # noqa
+from business_object.polygone import Polygone  # noqa
+from business_object.point import Point  # noqa
+
+from dao.dao_contour import Dao_contour # noqa
+from dao.dao_emplacement import Dao_emplacement # noqa
 
 
 def open_shp(path):
@@ -181,3 +184,12 @@ def get_info(path, i):
         Nom = "Pas de Nom"
 
     return Population, Code_INSEE, Nom
+
+
+def creer_bdd_par_niveau(path):
+    emplacements, contours, polygones, points = data_to_list(path)
+    for i in range(len(emplacements)):
+        Dao_emplacement().creer_entierement_emplacement(
+            emplacements[i], Dao_contour().creer_entierement_contour(
+                contours[i]))
+    return "Processus terminé."

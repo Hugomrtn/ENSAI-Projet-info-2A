@@ -1,119 +1,234 @@
+import pytest
+from unittest.mock import patch
 import sys
 import os
-import pytest
 
-from unittest.mock import patch, MagicMock
+sys.path.append(os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "../..")))
 
-sys.path.append(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '../..')))
-
-from business_object.point import Point # noqa
-from dao.dao_point import Dao_point # noqa
-
-# Erreur d'import dans le dao.dao_point mais
-# Je comprends pas pourquoi
+from dao.dao_point import Dao_point  # NOQA
+from business_object.point import Point  # NOQA
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "projet_test_dao"}):
-        yield
+class MockCursor:
+    """
+    Simulation d'un curseur de base de données.
+    """
+
+    def __init__(self):
+        self.queries = []
+        self.return_values = []
+        self.index = 0
+
+    def execute(self, query, params=None):
+        self.queries.append((query, params))
+
+    def fetchone(self):
+        if self.index < len(self.return_values):
+            result = self.return_values[self.index]
+            self.index += 1
+            return result
+        return None
+
+    def fetchall(self):
+        return self.return_values
+
+    def close(self):
+        pass
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+
+class MockDBConnection:
+    """
+    Simulation d'une connexion à la base de données.
+    """
+
+    def __init__(self, cursor):
+        self.cursor_instance = cursor
+
+    def cursor(self):
+        return self.cursor_instance
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
 
 @patch("dao.db_connection.DBConnection")
-def test_creer_ok(mock_db_conn):
-    """Test de la création d'un point avec succès"""
-
+def test_creer_point_existant(mock_db_conn):
+    """
+    Test création d'un point existant.
+    """
     # GIVEN
     point = Point(x=10, y=20)
-    mock_cursor = MagicMock()
-    mock_cursor.fetchone.return_value = {"id_point": 1}
-    mock_db_conn().connection.cursor.return_value.__enter__.return_value = mock_cursor
+    dao_point = Dao_point()
+    dao_point.existe = lambda p: (True, 1)
 
     # WHEN
-    created = Dao_point().creer(point)
+    result = dao_point.creer(point)
 
     # THEN
-    assert created
-    assert point.id_point == 1
+    assert result == 1
 
 
 @patch("dao.db_connection.DBConnection")
-def test_creer_ko(mock_db_conn):
-    """Test d'échec de la création d'un point"""
-
+def test_creer_point_nouveau(mock_db_conn):
+    """
+    Test création d'un nouveau point.
+    """
     # GIVEN
     point = Point(x=10, y=20)
-    mock_cursor = MagicMock()
-    mock_cursor.fetchone.return_value = None
-    mock_db_conn().connection.cursor.return_value.__enter__.return_value = mock_cursor
+    dao_point = Dao_point()
+    dao_point.existe = lambda p: (False, None)
+
+    mock_cursor = MockCursor()
+    mock_cursor.return_values = [{"id_point": 1}]
+    mock_db_conn.return_value = MockDBConnection(mock_cursor)
 
     # WHEN
-    created = Dao_point().creer(point)
+    result = dao_point.creer(point)
 
     # THEN
-    assert not created
-    assert point.id_point is None
+    assert result == 1
+    assert len(mock_cursor.queries) == 1
+    assert mock_cursor.queries[0][0].startswith("INSERT INTO projet_2A.points")
+    assert mock_cursor.queries[0][1] == {"x": 10, "y": 20}
 
 
 @patch("dao.db_connection.DBConnection")
-def test_association_polygone_points_ok(mock_db_conn):
-    """Test de la création de l'association entre un polygone et des points"""
+def test_existe_point_vrai(mock_db_conn):
+    """
+    Test vérification d'existence pour un point existant.
+    """
+    # GIVEN
+    point = Point(x=10, y=20)
+    mock_cursor = MockCursor()
+    mock_cursor.return_values = [{"id_point": 1}]
+    mock_db_conn.return_value = MockDBConnection(mock_cursor)
 
+    dao_point = Dao_point()
+
+    # WHEN
+    result = dao_point.existe(point)
+
+    # THEN
+    assert result == [True, 1]
+    assert len(mock_cursor.queries) == 1
+    assert mock_cursor.queries[0][0].startswith(
+        "SELECT id_point FROM projet_2A.points"
+        )
+    assert mock_cursor.queries[0][1] == {"x": 10, "y": 20}
+
+
+@patch("dao.db_connection.DBConnection")
+def test_existe_point_faux(mock_db_conn):
+    """
+    Test vérification d'existence pour un point inexistant.
+    """
+    # GIVEN
+    point = Point(x=10, y=20)
+    mock_cursor = MockCursor()
+    mock_cursor.return_values = []
+    mock_db_conn.return_value = MockDBConnection(mock_cursor)
+
+    dao_point = Dao_point()
+
+    # WHEN
+    result = dao_point.existe(point)
+
+    # THEN
+    assert result == [False, None]
+    assert len(mock_cursor.queries) == 1
+    assert mock_cursor.queries[0][0].startswith(
+        "SELECT id_point FROM projet_2A.points"
+        )
+    assert mock_cursor.queries[0][1] == {"x": 10, "y": 20}
+
+
+@patch("dao.db_connection.DBConnection")
+def test_obtenir_points_ordonnes_selon_id_polygone(mock_db_conn):
+    """
+    Test récupération des points ordonnés associés à un polygone.
+    """
     # GIVEN
     id_polygone = 1
-    liste_id_point = [1, 2, 3]
-    mock_cursor = MagicMock()
-    mock_db_conn().connection.cursor.return_value.__enter__.return_value = mock_cursor
+    mock_cursor = MockCursor()
+    mock_cursor.return_values = [
+        {"x": 1, "y": 2},
+        {"x": 3, "y": 4},
+        {"x": 5, "y": 6},
+    ]
+    mock_db_conn.return_value = MockDBConnection(mock_cursor)
+
+    dao_point = Dao_point()
 
     # WHEN
-    Dao_point().association_polygone_points(id_polygone, liste_id_point)
+    result = dao_point.obtenir_points_ordonnes_selon_id_polygone(id_polygone)
 
     # THEN
-    assert mock_cursor.execute.call_count == 3
-    # S'assure que les points sont dans le bon ordre
-    for i, id_point in enumerate(liste_id_point):
-        mock_cursor.execute.assert_any_call(
-            "INSERT INTO association_polygone_points(       "
-            "id_polygone, id_point, ordre) VALUES           "
-            "(%(id_polygone)s, %(id_point)s, %(ordre)s);    ",
-            {"id_polygone": id_polygone, "id_point": id_point, "ordre": i},
+    assert len(result) == 3
+    assert result[0].x == 1 and result[0].y == 2
+    assert result[1].x == 3 and result[1].y == 4
+    assert result[2].x == 5 and result[2].y == 6
+    assert len(mock_cursor.queries) == 1
+    assert mock_cursor.queries[0][0].startswith("SELECT points.x, points.y")
+    assert mock_cursor.queries[0][1] == {"id_polygone": id_polygone}
+
+
+@patch("dao.db_connection.DBConnection")
+def test_obtenir_point_selon_id(mock_db_conn):
+    """Test récupération d'un point selon son ID."""
+    # GIVEN
+    id_point = 1
+    mock_cursor = MockCursor()
+    mock_cursor.return_values = [{"x": 10, "y": 20}]
+    mock_db_conn.return_value = MockDBConnection(mock_cursor)
+
+    dao_point = Dao_point()
+
+    # WHEN
+    result = dao_point.obtenir_point_selon_id(id_point)
+
+    # THEN
+    assert result.x == 10
+    assert result.y == 20
+    assert len(mock_cursor.queries) == 1
+    assert mock_cursor.queries[0][0].startswith(
+        "SELECT x, y FROM projet_2A.point"
         )
+    assert mock_cursor.queries[0][1] == {"id_point": id_point}
 
 
 @patch("dao.db_connection.DBConnection")
-def test_existe_polygone_true(mock_db_conn):
-    """Test pour vérifier si un polygone existe (réussite)"""
-
+def test_obtenir_point_selon_id_inexistant(mock_db_conn):
+    """
+    Test récupération d'un point inexistant selon son ID.
+    """
     # GIVEN
-    liste_id_point = [1, 2, 3]
-    mock_cursor = MagicMock()
-    mock_cursor.fetchone.return_value = {"id_polygone": 1}
-    mock_db_conn().connection.cursor.return_value.__enter__.return_value = mock_cursor
+    id_point = 1
+    mock_cursor = MockCursor()
+    mock_cursor.return_values = []
+    mock_db_conn.return_value = MockDBConnection(mock_cursor)
+
+    dao_point = Dao_point()
 
     # WHEN
-    exists = Dao_point().existe_polygone(liste_id_point)
+    result = dao_point.obtenir_point_selon_id(id_point)
 
     # THEN
-    assert exists
-
-
-@patch("dao.db_connection.DBConnection")
-def test_existe_polygone_false(mock_db_conn):
-    """Test pour vérifier si un polygone existe (échec)"""
-
-    # GIVEN
-    liste_id_point = [1, 2, 3]
-    mock_cursor = MagicMock()
-    mock_cursor.fetchone.return_value = None
-    mock_db_conn().connection.cursor.return_value.__enter__.return_value = mock_cursor
-
-    # WHEN
-    exists = Dao_point().existe_polygone(liste_id_point)
-
-    # THEN
-    assert not exists
+    assert result is None
+    assert len(mock_cursor.queries) == 1
+    assert mock_cursor.queries[0][0].startswith(
+        "SELECT x, y FROM projet_2A.point"
+        )
+    assert mock_cursor.queries[0][1] == {"id_point": id_point}
 
 
 if __name__ == "__main__":

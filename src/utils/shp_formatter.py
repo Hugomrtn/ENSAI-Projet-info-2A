@@ -174,7 +174,10 @@ def get_info(path, i):
         Population = -1
 
     if "INSEE_" + niveau[:3] in prop:
-        Code_INSEE = int(prop["INSEE_" + niveau[:3]])
+        if "2B" or "2A" in niveau[:3]:
+            return -1, -1, "Corse"
+        else:
+            Code_INSEE = int(prop["INSEE_" + niveau[:3]])
     else:
         Code_INSEE = -1
 

@@ -9,8 +9,8 @@ from business_object.contour import Contour  # noqa
 from business_object.polygone import Polygone  # noqa
 from business_object.point import Point  # noqa
 
-from dao.dao_contour import Dao_contour # noqa
-from dao.dao_emplacement import Dao_emplacement # noqa
+# from dao.dao_contour import Dao_contour # noqa
+# from dao.dao_emplacement import Dao_emplacement # noqa
 
 
 def open_shp(path):
@@ -112,14 +112,24 @@ def data_to_list(path):
                         y = pt[1]
                     points_for_multi_polygon.append(Point(x, y))
                 polygone = Polygone(points_for_multi_polygon)
-                poly_enclaves.append(polygone)
+                poly_composants.append(polygone)
+                for i in range(1, len(multi_polygon)):
+                    for pt in multi_polygon[i]:
+                        if isinstance(pt, tuple) is False:
+                            continue
+                        else:
+                            x = pt[0]
+                            y = pt[1]
+                        points_for_multi_polygon.append(Point(x, y))
+                    polygone = Polygone(points_for_multi_polygon)
+                    poly_enclaves.append(polygone)
                 points.extend(points_for_multi_polygon)
 
         # Ajout des polygones aux contours
         contour.polygones_composants = poly_composants
         contour.polygones_enclaves = poly_enclaves
         polygones.append(poly_composants + poly_enclaves)
-    print("Formattage terminé")
+    print("Formatage terminé")
     return emplacements, contours, polygones, points
 
 
@@ -174,10 +184,10 @@ def get_info(path, i):
         Population = -1
 
     if "INSEE_" + niveau[:3] in prop:
-        if "2B" or "2A" in niveau[:3]:
-            return -1, -1, "Corse"
-        else:
+        if not ("B" or "A") in prop["INSEE_" + niveau[:3]]:
             Code_INSEE = int(prop["INSEE_" + niveau[:3]])
+        else:
+            return -1, -1, "Corse"
     else:
         Code_INSEE = -1
 
@@ -196,3 +206,7 @@ def creer_bdd_par_niveau(path):
             emplacements[i], Dao_contour().creer_entierement_contour(
                 contours[i]))
     return "Processus terminé."
+
+
+emplacements, contours, polygones, points = data_to_list("1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp")
+print(len(contours[3].polygones_composants))

@@ -129,7 +129,7 @@ def data_to_list(path):
         contour.polygones_composants = poly_composants
         contour.polygones_enclaves = poly_enclaves
         polygones.append(poly_composants + poly_enclaves)
-    print("Formatage terminé")
+    print("Formattage terminé")
     return emplacements, contours, polygones, points
 
 
@@ -184,10 +184,13 @@ def get_info(path, i):
         Population = -1
 
     if "INSEE_" + niveau[:3] in prop:
-        if not ("B" or "A") in prop["INSEE_" + niveau[:3]]:
-            Code_INSEE = int(prop["INSEE_" + niveau[:3]])
+        if ("B") not in prop["INSEE_" + niveau[:3]]:
+            if ("A") not in prop["INSEE_" + niveau[:3]]:
+                Code_INSEE = int(prop["INSEE_" + niveau[:3]])
+            else:
+                Code_INSEE = -1
         else:
-            return -1, -1, "Corse"
+            Code_INSEE = -1
     else:
         Code_INSEE = -1
 
@@ -208,5 +211,7 @@ def creer_bdd_par_niveau(path):
     return "Processus terminé."
 
 
-emplacements, contours, polygones, points = data_to_list("1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/REGION.shp")
-print(len(contours[3].polygones_composants))
+path = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/COMMUNE.shp"
+
+for i in range(1000):
+    print(get_info(path, i))

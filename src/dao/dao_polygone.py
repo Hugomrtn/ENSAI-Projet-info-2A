@@ -88,12 +88,12 @@ class Dao_polygone(metaclass=Singleton):
             L'identifiant du polygone créé ou existant dans la base de données.
         """
 
-        existe = Dao_polygone().existe(polygone)
+        """existe = Dao_polygone().existe(polygone)
         if existe[0]:
             id_polygone = existe[1]
         else:
-            id_polygone = Dao_polygone().creer()
-
+            id_polygone = Dao_polygone().creer()"""
+        id_polygone = Dao_polygone().creer()  # a supprimer si on veut existe
         for i in range(len(polygone.liste_points)):
             id_point = Dao_point().creer(polygone.liste_points[i])
             Dao_polygone().creer_association_polygone_point(

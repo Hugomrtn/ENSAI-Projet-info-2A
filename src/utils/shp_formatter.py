@@ -9,8 +9,8 @@ from business_object.contour import Contour  # noqa
 from business_object.polygone import Polygone  # noqa
 from business_object.point import Point  # noqa
 
-# from dao.dao_contour import Dao_contour # noqa
-# from dao.dao_emplacement import Dao_emplacement # noqa
+from dao.dao_contour import Dao_contour # noqa
+from dao.dao_emplacement import Dao_emplacement # noqa
 
 
 def open_shp(path):
@@ -209,9 +209,3 @@ def creer_bdd_par_niveau(path):
             emplacements[i], Dao_contour().creer_entierement_contour(
                 contours[i]))
     return "Processus terminé."
-
-
-path = "1_DONNEES_LIVRAISON_2024-10-00105/ADE_3-2_SHP_LAMB93_FXX-ED2024-10-16/COMMUNE.shp"
-
-for i in range(1000):
-    print(get_info(path, i))

@@ -39,5 +39,5 @@ class Point:
         liste_points = []
         csv_reader = csv.reader(contenu_fichier)
         for lignes in csv_reader:
-            liste_points.append(Point(float(lignes[0]), float(lignes[1])))
+            liste_points.append(Point(float(lignes[1]), float(lignes[0])))
         return liste_points

@@ -27,9 +27,9 @@ class Dao_point(metaclass=Singleton):
             Sinon, retourne l'ID du nouveau point créé dans la base de données
         """
 
-        existe = Dao_point().existe(point)
+        """existe = Dao_point().existe(point)
         if existe[0]:
-            return existe[1]
+            return existe[1]"""
 
         res = None
 
